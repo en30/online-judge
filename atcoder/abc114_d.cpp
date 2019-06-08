@@ -18,21 +18,19 @@ int main () {
     }
   }
 
-  int ans = 0;
-  int k_2 = 0, k_4 = 0, k_14 = 0, k_24 = 0, k_74 = 0;
-  for(int i : c) {
-    if(i >= 2) k_2++;
-    if(i >= 4) k_4++;
-    if(i >= 14) k_14++;
-    if(i >= 24) k_24++;
-    if(i >= 74) k_74++;
-  }
-  ans += k_4*(k_4-1)*(k_2-2)/2;
-  ans += k_24*(k_2-1);
-  ans += k_14*(k_4-1);
-  ans += k_74;
 
-  cout << ans << endl;
+  vector<int> dp(76, 0);
+  dp[1] = 1;
+
+  for(int i = 0; i < c.size(); i++) {
+    if(c[i]) for(int j = 75; j >= 0; j--) {
+      for(int x = 1; x <= c[i]; x++) {
+        if(j*(x+1) <= 75) dp[j*(x+1)] += dp[j];
+      }
+    }
+  }
+
+  cout << dp[75] << endl;
 
   return 0;
 }
