@@ -89,17 +89,18 @@ int main () {
   next:;
   }
 
-  vector<vector<mint>> c(H+1, vector<mint>(W, 0));
+  vector<vector<mint>> c(2, vector<mint>(W, 0));
   c[0][0] = 1;
   rep(h,H) {
+    fill(c[(h+1)&1].begin(),c[(h+1)&1].end(),0);
     rep(i,W) {
       rep(j,W) {
-        c[h+1][j] += t[i][j] * c[h][i];
+        c[(h+1)&1][j] += t[i][j] * c[h&1][i];
       }
     }
   }
 
-  cout << c[H][K-1] << endl;
+  cout << c[H&1][K-1] << endl;
 
   return 0;
 }
