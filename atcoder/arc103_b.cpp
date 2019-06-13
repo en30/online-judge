@@ -3,38 +3,59 @@ using namespace std;
 typedef long long ll;
 #define rep(i, N) for (int i = 0; i < (int)N; i++)
 
+typedef pair<int, int> sig;
+
 int main () {
+  map<sig, char> dir;
+  dir[sig(+1, +1)] = 'R';
+  dir[sig(+1, -1)] = 'U';
+  dir[sig(-1, +1)] = 'D';
+  dir[sig(-1, -1)] = 'L';
+
   int N;
   cin >> N;
-  vector<int> X(N), Y(N);
-
-  int m = 0;
+  vector<int> U(N), V(N);
 
   rep(i,N) {
-    cin >> X[i] >> Y[i];
-    m = max(m, abs(X[i])+ abs(Y[i]));
+    int X, Y;
+    cin >> X >> Y;
+    U[i] = X + Y;
+    V[i] = X - Y;
   }
 
-  int p = (X[0] + Y[0]) & 1;
+  int p = U[0] & 1;
   rep(i,N) {
-    if(((X[i] + Y[i]) & 1) != p) {
+    if((U[i] & 1) != p) {
       cout << "-1" << endl;
       return 0;
     }
   }
 
-  cout << m << endl;
-  rep(i,m) {
+
+  int m = 31;
+  cout << m + (!p) << endl;
+  if(!p) cout << "1 ";
+  for(int i = m - 1; i >= 0; i--) {
+    cout << (1<<i);
     if(i != 0) cout << " ";
-    cout << 1;
   }
   cout << endl;
 
   rep(i,N) {
-    rep(j, abs(X[i])) cout << (X[i] > 0 ? 'R' : 'L');
-    rep(j, abs(Y[i])) cout << (Y[i] > 0 ? 'U' : 'D');
+    int u = 0, v = 0;
+    if(!p) {
+      cout << 'R';
+      u++; v++;
+    }
 
-    rep(j,(m-abs(X[i])-abs(Y[i]))/2) cout << "RL";
+    for(int j = m - 1; j >= 0; j--) {
+      int d = (1<<j);
+
+      sig s = sig((U[i]-u)/abs(U[i] - u), (V[i] - v)/abs(V[i] - v));
+      u += d*s.first;
+      v += d*s.second;
+      cout << dir[s];
+    }
     cout << endl;
   }
 
