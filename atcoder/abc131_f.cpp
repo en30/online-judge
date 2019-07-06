@@ -9,6 +9,20 @@ bool used[G+1];
 
 const int yBase = 1e5;
 
+ll nx, ny;
+
+void dfs(int u) {
+  if(used[u]) return;
+  used[u] = true;
+  if(u <= yBase) {
+    nx++;
+  } else {
+    ny++;
+  }
+
+  for(auto v: e[u]) dfs(v);
+}
+
 int main () {
   int N;
   cin >> N;
@@ -20,31 +34,12 @@ int main () {
     e[yBase+y].push_back(x);
   }
 
-  ll ans = 0;
-  queue<int> q;
+  ll ans = -N;
   for(int i = 1; i <= G; i++) {
     if(used[i]) continue;
-
-    ll nx, ny, ne;
-    nx = ny = ne = 0;
-    q.push(i);
-    used[i] = true;
-    while(!q.empty()) {
-      int u = q.front(); q.pop();
-      if(u <= yBase) {
-        nx++;
-      } else {
-        ny++;
-      }
-
-      for(auto v: e[u]) {
-        ne++;
-        if(used[v]) continue;
-        q.push(v);
-        used[v] = true;
-      }
-    }
-    if(nx >= 2 && ny >= 2) ans += nx * ny - ne/2;
+    nx = ny = 0;
+    dfs(i);
+    ans += nx * ny;
   }
 
   cout << ans << endl;
