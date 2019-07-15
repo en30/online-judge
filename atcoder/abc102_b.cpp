@@ -9,15 +9,8 @@ int main () {
 
   vector<int> A(N);
   rep(i,N) cin >> A[i];
-
-  int ans = 0;
-  for(int i = 0; i < N - 1; i++){
-    for(int j = i+1; j < N; j++) {
-      ans = max(ans, abs(A[i]-A[j]));
-    }
-  }
-
-  cout << ans << endl;
+  sort(A.begin(), A.end());
+  cout << A[N-1] - A[0] << endl;
 
   return 0;
 }
