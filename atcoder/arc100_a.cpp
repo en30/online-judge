@@ -14,16 +14,8 @@ int main () {
   }
   sort(A.begin(), A.end());
 
-  vector<ll> S(N+1, 0);
-  rep(i,N) S[i+1] = S[i] + A[i];
-
-  ll ans = -1;
-  for(int i = 0; i < N; i++) {
-    ll T = S[N] - 2*S[i] + (2*i - N)*A[i];
-    if(ans == -1) ans = T;
-    ans = min(ans, T);
-  }
-
+  ll ans = 0;
+  rep(i,N) ans += abs(A[i] -A[N/2]);
   cout << ans << endl;
 
   return 0;
