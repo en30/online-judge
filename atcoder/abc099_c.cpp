@@ -3,24 +3,12 @@ using namespace std;
 typedef long long ll;
 #define rep(i, N) for (int i = 0; i < (int)N; i++)
 
-int N;
-vector<int> v;
-int ub;
-
-int f(int n, int rest, int i) {
-  if(n > ub) return ub;
-  if(rest == 0) return n;
-  if(i == v.size()) return 1e9;
-  int ans = 1e9;
-  for(int j = 0; j*v[i] <= rest; j++) {
-    ans = min(ans, f(n+j, rest-j*v[i], i+1));
-  }
-  return ans;
-}
-
+const int INF = 1e9;
 int main () {
+  int N;
   cin >> N;
 
+  vector<int> v;
   v.push_back(1);
   for(int x = 6; x <= N; x *= 6) {
     v.push_back(x);
@@ -28,17 +16,18 @@ int main () {
   for(int x = 9; x <= N; x *= 9) {
     v.push_back(x);
   }
-  sort(v.begin(), v.end());
 
-  ub = 0;
-  int m = N;
-  while(m > 0) {
-    int i = distance(v.begin(), upper_bound(v.begin(), v.end(), m)) - 1;
-    m -= v[i];
-    ub++;
+  int M = v.size();
+  vector<vector<int>> dp(M+1, vector<int>(N+1, INF));
+  dp[0][0] = 0;
+  for(int i = 0; i < M; i++) {
+    for(int j = 0; j <= N; j++) {
+      dp[i+1][j] = dp[i][j];
+      if(j-v[i] >= 0) dp[i+1][j] = min(dp[i+1][j], dp[i+1][j-v[i]] + 1);
+    }
   }
 
-  cout << f(0, N, 0) << endl;
+  cout << dp[M][N] << endl;
 
   return 0;
 }
