@@ -66,4 +66,6 @@ tramp
 # cask packages
 .cask/
 
+CMakeLists.txt
+cmake-build-debug
 
