@@ -6,37 +6,30 @@ typedef long long ll;
 
 int H, W, D, Q;
 
-struct Point {
-  int x, y;
-};
-
-map<int, Point> m;
-
 int main () {
   cin >> H >> W >> D;
+  int N = H*W;
 
+  vector<int> x(N), y(N);
   rep(i,H) rep(j,W) {
     int A;
     cin >> A;
     A--;
-    m[A] = Point{i,j};
+    x[A] = i;
+    y[A] = j;
   }
 
-  vector<vector<int>> S(D, vector<int>((H*W)/D + 1, 0));
-  rep(r,D) {
-    for(int i = 0; r + (i+1)*D < H*W; i++) {
-      int x = r + i*D;
-      S[r][i+1] = S[r][i] + abs(m[x+D].x - m[x].x) + abs(m[x+D].y - m[x].y);
-    }
+  vector<int> S(N + 1, 0);
+  for(int i = D; i < N; i++) {
+    S[i] = S[i-D] + abs(x[i] - x[i-D]) + abs(y[i] - y[i-D]);
   }
 
   cin >> Q;
-  rep(i,Q) {
+  while(Q--) {
     int L, R;
     cin >> L >> R;
     L--, R--;
-    int r = L % D;
-    cout << S[r][R/D] - S[r][L/D] << endl;
+    cout << S[R] - S[L] << endl;
   }
 
   return 0;

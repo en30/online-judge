@@ -10,17 +10,13 @@ ll n[5];
 map<char, int> m;
 
 int main () {
-  m['M'] = 1;
-  m['A'] = 2;
-  m['R'] = 3;
-  m['C'] = 4;
-  m['H'] = 5;
+  string s = "MARCH";
 
   cin >> N;
   rep(i,N) {
     string S;
     cin >> S;
-    if(m[S[0]]) n[m[S[0]] - 1]++;
+    rep(i,5) if(S[0] == s[i]) n[i]++;
   }
 
   ll ans = 0;
