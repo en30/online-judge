@@ -6,48 +6,24 @@ typedef long long ll;
 
 int N, C;
 
-struct Show {
-  int s, t, c;
-
-  bool operator < (const Show& that) {
-    return s < that.s;
-  }
-};
-
 int main () {
   cin >> N >> C;
 
-  vector<vector<Show>> ss(C);
+  vector<int> s(N), t(N), c(N);
   rep(i,N) {
-    Show x;
-    cin >> x.s >> x.t >> x.c;
-    x.c--;
-    ss[x.c].push_back(x);
+    cin >> s[i] >> t[i] >> c[i];
+    c[i]--;
+  }
+  int T = 2 * (*max_element(all(t)));
+  vector<int> sm(T+1, 0);
+  rep(k,C) {
+    vector<int> tt(T+1, 0);
+    rep(i,N) if(c[i] == k) tt[s[i]*2-1]++, tt[t[i]*2]--;
+    rep(t,T) tt[t+1] += tt[t];
+    rep(t,T+1) sm[t] += min(tt[t], 1);
   }
 
-  vector<Show> shows;
-  rep(i,C) {
-    sort(all(ss[i]));
-    int l = ss[i].size();
-    rep(j,l) {
-      while(j + 1 < l && ss[i][j].t == ss[i][j+1].s) {
-        ss[i][j+1].s = ss[i][j].s;
-        j++;
-      }
-      shows.push_back(ss[i][j]);
-    }
-  }
-
-  int ans = 1;
-  priority_queue<int, vector<int>, greater<int>> pq;
-  sort(all(shows));
-  for(auto& s: shows) {
-    while(!pq.empty() && pq.top() < s.s) pq.pop();
-    ans = max(ans, static_cast<int>(pq.size()) + 1);
-    pq.push(s.t);
-  }
-
-  cout << ans << endl;
+  cout << *max_element(all(sm)) << endl;
 
   return 0;
 }
