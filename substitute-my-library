@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+INCLUDE_PATTERN = %r{^#include\s+"../include/([^/]*?)"$}
+
+file = ARGV[0]
+
+res = File.read(file)
+
+while res.match?(INCLUDE_PATTERN)
+  res.gsub!(INCLUDE_PATTERN) do
+    File.read(File.expand_path("../include/" + $1, __FILE__)).chomp
+  end
+end
+
+puts res
