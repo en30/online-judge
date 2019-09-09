@@ -1,14 +1,15 @@
 #include <bits/stdc++.h>
-using namespace std;
-typedef long long ll;
-#define rep(i, N) for (int i = 0; i < (int)N; i++)
+#include "../include/template"
 
-int main () {
-  string s;
+string s;
+
+int main() {
   cin >> s;
-  rep(i, s.size()) {
-    if(i % 2 == 0) cout << s[i];
+  int N = s.size();
+  rep(i, N) {
+    if (i % 2 == 0) cout << s[i];
   }
   cout << endl;
+
   return 0;
 }
