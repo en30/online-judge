@@ -1,5 +1,6 @@
 ---
 BasedOnStyle:  Google
 ---
-Language:        Cpp
-Standard:        Cpp11
+Language: Cpp
+Standard: Cpp11
+SortIncludes: false
