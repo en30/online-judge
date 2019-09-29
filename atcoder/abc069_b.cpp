@@ -3,10 +3,11 @@ using namespace std;
 typedef long long ll;
 #define rep(i, N) for (int i = 0; i < (int)N; i++)
 
-int main () {
-  string s;
+string s;
+int main() {
   cin >> s;
-  int l = s.size();
-  printf("%c%d%c\n", s[0], l-2, s[l-1]);
-  return 0;
+  cout << s[0];
+  cout << s.size() - 2;
+  cout << s[s.size() - 1];
+  cout << endl;
 }
