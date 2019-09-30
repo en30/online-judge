@@ -1,13 +1,17 @@
 #include <bits/stdc++.h>
-using namespace std;
-typedef long long ll;
-#define rep(i, N) for (int i = 0; i < (int)N; i++)
+#include "../include/template"
 
-int main () {
-  int n;
-  cin >> n;
-  int ans = 1;
-  while((ans << 1) <= n) ans = (ans << 1);
+int N;
+int main() {
+  cin >> N;
+
+  int ans;
+  for (int i = 6; i >= 0; --i) {
+    if ((N >> i) & 1) {
+      ans = 1 << i;
+      break;
+    }
+  }
   cout << ans << endl;
   return 0;
 }
