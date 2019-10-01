@@ -1,16 +1,13 @@
 #include <bits/stdc++.h>
-using namespace std;
-typedef long long ll;
-#define rep(i, N) for (int i = 0; i < (int)N; i++)
+#include "../include/template"
 
-int gcd(int a, int b) {
-  if(b == 0) return a;
-  return gcd(b, a % b);
-}
-
-int main () {
-  int a, b, c;
-  cin >> a >> b >> c;
-  cout << (c == 0 || (gcd(a % b , c) == 1) ? "YES" : "NO") << endl;
+int A, B, C;
+int main() {
+  cin >> A >> B >> C;
+  bool yes = false;
+  rep(i, B) {
+    if (((i + 1) * A) % B == C) yes = true;
+  }
+  cout << (yes ? "YES" : "NO") << endl;
   return 0;
 }
