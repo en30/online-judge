@@ -6,16 +6,15 @@ int A, B;
 int main() {
   cin >> A >> B;
 
-  if (A == B) {
-    cout << "Draw";
-  } else if (A == 1) {
+  if (A == 1) A += 13;
+  if (B == 1) B += 13;
+
+  if (A > B) {
     cout << "Alice";
-  } else if (B == 1) {
+  } else if (A < B) {
     cout << "Bob";
-  } else if (A > B) {
-    cout << "Alice";
   } else {
-    cout << "Bob";
+    cout << "Draw";
   }
 
   cout << endl;

@@ -2,42 +2,39 @@
 #include "../include/template"
 
 int N, Ma, Mb;
+vector<int> a, b, c;
 
-struct Chemical {
-  int w, c;
-};
+const int W = 401;
+int dp[W][W];
 
 int main() {
   cin >> N >> Ma >> Mb;
 
-  vector<Chemical> chems(N);
-  rep(i, N) {
-    int a, b;
-    cin >> a >> b >> chems[i].c;
-    chems[i].w = a * Mb - b * Ma;
-  }
+  a.resize(N), b.resize(N), c.resize(N);
+  rep(i, N) cin >> a[i] >> b[i] >> c[i];
 
-  sort(all(chems),
-       [](const Chemical &a, const Chemical &b) { return a.w > b.w; });
-
-  const int W = 4001;
   const int INF = 1e9;
-  int dp[41][W];
-  rep(i, N) rep(j, W) dp[i][j] = INF;
+
+  rep(i, N + 1) rep(j, W) rep(k, W) dp[j][k] = INF;
   dp[0][0] = 0;
-  priority_queue<int, vector<int>, greater<int>> pq;
+
   rep(i, N) {
-    rep(j, W) {
-      if (dp[i][j] != INF) {
-        int nj = j + chems[i].w;
-        if (nj >= 0) dp[i + 1][nj] = min(dp[i + 1][nj], dp[i][j] + chems[i].c);
-        if (nj == 0) pq.push(dp[i][j] + chems[i].c);
-        dp[i + 1][j] = min(dp[i + 1][j], dp[i][j]);
+    for (int j = W - 1; j >= 0; --j) {
+      for (int k = W - 1; k >= 0; --k) {
+        if (dp[j][k] == INF) continue;
+        dp[j + a[i]][k + b[i]] = min(dp[j + a[i]][k + b[i]], dp[j][k] + c[i]);
+        dp[j][k] = min(dp[j][k], dp[j][k]);
       }
     }
   }
 
-  cout << (pq.empty() ? -1 : pq.top()) << endl;
+  int ans = INF;
+  rep(i, W) rep(j, W) {
+    if (i == 0 && j == 0) continue;
+    if (i * Mb == j * Ma) ans = min(ans, dp[i][j]);
+  }
+
+  cout << (ans == INF ? -1 : ans) << endl;
 
   return 0;
 }
