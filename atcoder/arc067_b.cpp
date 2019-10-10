@@ -9,16 +9,8 @@ int main() {
 
   rep(i, N) cin >> X[i];
 
-  int M = N - 1;
   ll ans = 0;
-  rep(i, N - 1) {
-    ll c = (X[i + 1] - X[i]) * A;
-    if (c <= B) {
-      --M;
-      ans += c;
-    }
-  }
-  ans += M * B;
+  rep(i, N - 1) ans += min((X[i + 1] - X[i]) * A, B);
 
   cout << ans << endl;
   return 0;
