@@ -4,7 +4,7 @@ class ModInt {
 
  public:
   ModInt(long long v = 0) : x(v % MOD) {
-    if (x < 0) v += MOD;
+    if (x < 0) x += MOD;
   }
 
   ModInt& operator+=(const ModInt& r) {
@@ -19,7 +19,7 @@ class ModInt {
     return *this;
   }
   ModInt& operator*=(const ModInt& r) {
-    x = x * r.x % MOD;
+    x = (x * r.x) % MOD;
     return *this;
   }
   ModInt& operator/=(const ModInt& r) {
