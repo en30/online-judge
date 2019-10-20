@@ -1,22 +1,14 @@
 #include <bits/stdc++.h>
 #include "../include/template"
+#include "../include/run_length.hpp"
 
 int N;
-
 int main() {
   cin >> N;
 
-  int ans = 0;
-  char g = '0';
-  rep(i, N) {
-    char c;
-    cin >> c;
-    if (c != g) {
-      ans++;
-      g = c;
-    }
-  }
+  string s;
+  cin >> s;
 
-  cout << ans << endl;
+  cout << RunLength<char>::compress(s).size() << endl;
   return 0;
 }
