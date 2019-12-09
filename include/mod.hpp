@@ -61,4 +61,6 @@ class ModInt {
   friend istream& operator>>(istream& is, ModInt& x) { return is >> x.x; }
 
   int getMod() { return MOD; }
+
+  long long val() { return x; }
 };
