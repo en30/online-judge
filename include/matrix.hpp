@@ -4,6 +4,7 @@ class Matrix {
 
  public:
   Matrix(size_t n, size_t m, T v = 0) : A(n, vector<T>(m, v)){};
+  Matrix(initializer_list<initializer_list<T>> B) : A(B.begin(), B.end()){};
 
   size_t height() const { return A.size(); }
 
