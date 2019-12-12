@@ -4,7 +4,7 @@
 #include "../include/combination.hpp"
 #include "../include/prime.hpp"
 
-using mint = ModInt<1000000007>;
+using mint = ModInt;
 
 int main() {
   int N, M;

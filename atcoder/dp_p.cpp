@@ -2,7 +2,7 @@
 #include "../include/template"
 #include "../include/mod.hpp"
 
-using mint = ModInt<1000000007>;
+using mint = ModInt;
 
 int N;
 vector<vector<int>> G;

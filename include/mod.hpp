@@ -1,8 +1,10 @@
-template <int MOD>
 class ModInt {
+  static int MOD;
   long long x;
 
  public:
+  static void mod(int m) { MOD = m; }
+
   ModInt(long long v = 0) : x(v % MOD) {
     if (x < 0) x += MOD;
   }
@@ -46,7 +48,7 @@ class ModInt {
     return ModInt(u);
   }
 
-  ModInt<MOD> pow(long long n) const {
+  ModInt pow(long long n) const {
     ModInt ret(1), mul(x);
     while (n > 0) {
       if (n & 1) ret *= mul;
@@ -64,3 +66,4 @@ class ModInt {
 
   long long val() { return x; }
 };
+int ModInt::MOD = 1000000007;

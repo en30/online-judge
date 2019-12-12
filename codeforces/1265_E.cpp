@@ -2,13 +2,15 @@
 #include "../include/template"
 #include "../include/mod.hpp"
 
-using mint = ModInt<998244353>;
+using mint = ModInt;
 
 int n;
 vector<int> p;
 vector<mint> P;
 
 int main() {
+  ModInt::mod(998244353);
+
   cin >> n;
   p.resize(n);
   P.resize(n + 1);

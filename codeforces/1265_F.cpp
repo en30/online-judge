@@ -1,12 +1,15 @@
 #include <bits/stdc++.h>
 #include "../include/template"
 #include "../include/mod.hpp"
+#include "../include/combination.hpp"
 
-using mint = ModInt<998244353>;
+using mint = ModInt;
 
 string S;
 
 int main() {
+  ModInt::mod(998244353);
+
   cin >> S;
 
   int N = S.size();
@@ -20,16 +23,11 @@ int main() {
     R[N - i - 1] = R[N - i] + (S[N - i - 1] == ')');
   }
 
-  vector<mint> fact(M + 1), ifact(M + 1);
-  fact[0] = 1;
-  rep(i, M) fact[i + 1] = fact[i] * (i + 1);
-  rep(i, M + 1) ifact[i] = fact[i].inverse();
-
-  auto comb = [&](int n, int k) { return fact[n] * ifact[n - k] * ifact[k]; };
+  Combination<mint> comb(M + 1);
 
   vector<mint> SB(M + 2, 0), SQ(M + 1, 0);
-  rep(i, M + 1) SB[i + 1] = SB[i] + comb(M, i);
-  rep(i, M) SQ[i + 1] = SQ[i] + comb(M - 1, i);
+  rep(i, M + 1) SB[i + 1] = SB[i] + comb.C(M, i);
+  rep(i, M) SQ[i + 1] = SQ[i] + comb.C(M - 1, i);
 
   mint ans = 0;
   rep(i, N) {

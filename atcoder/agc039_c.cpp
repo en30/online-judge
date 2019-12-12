@@ -2,8 +2,7 @@
 #include "../include/template"
 #include "../include/mod.hpp"
 
-const int MOD = 998244353;
-using mint = ModInt<MOD>;
+using mint = ModInt;
 
 int N;
 string X;
@@ -16,6 +15,8 @@ string flipAppend(string &S) {
 }
 
 int main() {
+  ModInt::mod(998244353);
+
   cin >> N >> X;
 
   X = flipAppend(X);

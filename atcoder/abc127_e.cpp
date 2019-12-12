@@ -3,7 +3,7 @@
 #include "../include/mod.hpp"
 #include "../include/combination.hpp"
 
-using mint = ModInt<1000000007>;
+using mint = ModInt;
 
 int N, M, K;
 

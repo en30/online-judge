@@ -2,8 +2,7 @@
 #include "../include/template"
 #include "../include/mod.hpp"
 
-const ll MOD = 1000000007;
-using mint = ModInt<MOD>;
+using mint = ModInt;
 
 int N;
 vector<string> S(2);
