@@ -8,13 +8,14 @@ int main() {
   a.resize(N);
   rep(i, N) cin >> a[i];
 
-  vector<ll> S(N + 1, 0);
-  rep(i, N) S[i + 1] = S[i] + a[i];
-
   ll ans = 0;
+  int k = 0;
+  ll sum = 0;
   rep(i, N) {
-    int k = distance(S.begin(), lower_bound(S.begin() + i, S.end(), K + S[i]));
+    while (k < N && sum < K) sum += a[k++];
+    if (sum < K) break;
     ans += N - k + 1;
+    sum -= a[i];
   }
 
   cout << ans << endl;
