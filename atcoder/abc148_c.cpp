@@ -1,12 +1,8 @@
 #include <bits/stdc++.h>
 #include "../include/template"
+#include "../include/gcd.hpp"
 
 int A, B;
-
-int gcd(int a, int b) {
-  if (b == 0) return a;
-  return gcd(b, a % b);
-}
 
 int main() {
   cin >> A >> B;

@@ -1,10 +1,6 @@
 #include <bits/stdc++.h>
 #include "../include/template"
-
-ll gcd(ll a, ll b) {
-  if (b == 0) return a;
-  return gcd(b, a % b);
-}
+#include "../include/gcd.hpp"
 
 int N;
 vector<ll> T;
