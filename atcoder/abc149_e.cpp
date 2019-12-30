@@ -1,45 +1,28 @@
 #include <bits/stdc++.h>
 #include "../include/template"
+#include "../include/convolution.hpp"
 
-ll N;
+int N;
 ll M;
-vector<ll> A;
+vector<int> A;
+const int SUM_MAX = 2e5;
 
 int main() {
   cin >> N >> M;
   A.resize(N);
   rep(i, N) cin >> A[i];
 
-  sort(all(A));
+  vector<ll> freq(SUM_MAX + 1, 0);
+  rep(i, N) freq[A[i]] += 1;
 
-  vector<ll> S(N + 1, 0);
-  rep(i, N) S[i + 1] = S[i] + A[i];
-
-  function<ll(ll)> num = [&](ll t) {
-    ll res = 0;
-    rep(i, N) res += distance(lower_bound(all(A), t - A[i]), A.end());
-    return res;
-  };
-
-  ll l = 0, r = 1e6;
-  while (r - l > 1) {
-    ll m = (l + r) / 2;
-    if (num(m) <= M) {
-      r = m;
-    } else {
-      l = m;
-    }
-  }
-
+  Convolution<ll> conv(freq, freq);
   ll ans = 0;
-  ll rest = M;
-  rep(i, N) {
-    int l = distance(lower_bound(all(A), r - A[i]), A.end());
-    ans += l * A[i] + S[N] - S[N - l];
-    rest -= l;
+  for (int i = SUM_MAX; i >= 0; --i) {
+    ll c = min(M, conv[i]);
+    ans += c * i;
+    M -= c;
+    if (M == 0) break;
   }
-  ans += rest * l;
-
   cout << ans << endl;
 
   return 0;

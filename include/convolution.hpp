@@ -1,7 +1,8 @@
+template <typename T = int>
 class Convolution {
   using C = complex<double>;
   const C ZERO = C(0.0, 0.0);
-  vector<int> conv;
+  vector<T> conv;
 
   vector<C> dft(const vector<C>& x) {
     int n = x.size();
@@ -46,7 +47,7 @@ class Convolution {
   }
 
  public:
-  Convolution(const vector<int>& a, const vector<int>& b) {
+  Convolution(const vector<T>& a, const vector<T>& b) {
     int n = a.size(), m = b.size();
     int l = 1;
     while (n + m >= l) l *= 2;
@@ -54,6 +55,7 @@ class Convolution {
     vector<C> ca(l, ZERO), cb(l, ZERO);
     for (int i = 0; i < n; ++i) ca[i] = C(a[i], 0.0);
     for (int i = 0; i < m; ++i) cb[i] = C(b[i], 0.0);
+
     vector<C> fa = dft(ca), fb = dft(cb);
     vector<C> fc(l);
     for (int i = 0; i < l; ++i) {
@@ -67,7 +69,7 @@ class Convolution {
     }
   }
 
-  int operator[](int i) { return conv[i]; }
+  T operator[](int i) { return conv[i]; }
 
-  vector<int> toVector() { return conv; }
+  vector<T> toVector() { return conv; }
 };
