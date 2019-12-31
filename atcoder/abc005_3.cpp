@@ -15,21 +15,15 @@ int main() {
   rep(i, M) cin >> B[i];
 
   vector<bool> used(N, false);
+  int a = 0;
   rep(i, M) {
-    bool found = false;
-    rep(j, N) {
-      if (!used[j] && A[j] <= B[i] && B[i] <= A[j] + T) {
-        found = true;
-        used[j] = true;
-        break;
-      }
-    }
-    if (!found) {
+    while (a < N && A[a] + T < B[i]) ++a;
+    if (a == N || B[i] < A[a]) {
       cout << "no" << endl;
       return 0;
     }
+    ++a;
   }
   cout << "yes" << endl;
-
   return 0;
 }
