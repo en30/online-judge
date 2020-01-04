@@ -4,9 +4,10 @@ class FloydWarshall {
   vector<vector<T>> distTo;
 
  public:
+  const static T INF = numeric_limits<T>::max() / 2;
   FloydWarshall(vector<vector<T>> G) {
     int V = G.size();
-    T INF = numeric_limits<T>::max() / 2;
+
     distTo.resize(V, vector<T>(V, INF));
 
     for (int u = 0; u < V; ++u) {
