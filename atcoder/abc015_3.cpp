@@ -7,9 +7,8 @@ vector<vector<int>> T;
 bool buggy(int i, int curr) {
   if (i == N) return curr == 0;
 
-  bool res = false;
-  rep(j, K) { res |= buggy(i + 1, curr ^ T[i][j]); }
-  return res;
+  rep(j, K) if (buggy(i + 1, curr ^ T[i][j])) return true;
+  return false;
 }
 
 int main() {

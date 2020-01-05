@@ -7,7 +7,7 @@ int main() {
   cin >> N;
 
   int c = 0;
-  double sum = 0;
+  int sum = 0;
   rep(i, N) {
     int A;
     cin >> A;
@@ -16,6 +16,6 @@ int main() {
     ++c;
   }
 
-  cout << ceil(sum / c) << endl;
+  cout << (sum + c - 1) / c << endl;
   return 0;
 }
