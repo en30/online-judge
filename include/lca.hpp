@@ -1,11 +1,11 @@
 class LCA {
   vector<vector<int>> parent;
-  vector<int> depth;
+  vector<int> _depth;
   int logV;
 
   void dfs(int u, int p, int d, vector<vector<int>> &adjacencyList) {
     parent[0][u] = p;
-    depth[u] = d;
+    _depth[u] = d;
     for (auto v : adjacencyList[u]) {
       if (v != p) dfs(v, u, d + 1, adjacencyList);
     }
@@ -17,7 +17,7 @@ class LCA {
     logV = 0;
     while ((1 << logV) < V) logV++;
     parent.resize(logV, vector<int>(V));
-    depth.resize(V);
+    _depth.resize(V);
 
     dfs(root, -1, 0, adjacencyList);
     for (int k = 0; k + 1 < logV; k++) {
@@ -32,9 +32,9 @@ class LCA {
   }
 
   int find(int u, int v) {
-    if (depth[u] > depth[v]) swap(u, v);
+    if (_depth[u] > _depth[v]) swap(u, v);
     for (int k = 0; k < logV; k++) {
-      if ((depth[v] - depth[u]) >> k & 1) {
+      if ((_depth[v] - _depth[u]) >> k & 1) {
         v = parent[k][v];
       }
     }
@@ -47,4 +47,6 @@ class LCA {
     }
     return parent[0][u];
   }
+
+  int depth(int u) { return _depth[u]; }
 };
