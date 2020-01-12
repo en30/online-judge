@@ -15,6 +15,13 @@ class Point {
   double abs() const { return sqrt(norm()); }
   double norm() const { return x * x + y * y; }
 
+  Point rotate(double theta) const {
+    return Point(cos(theta) * x - sin(theta) * y,
+                 sin(theta) * x + cos(theta) * y);
+  }
+
+  Point normalize() const { return Point(*this) / abs(); }
+
   bool operator<(const Point &p) const { return x != p.x ? x < p.x : y < p.y; }
 
   bool operator==(const Point &p) const {
@@ -31,6 +38,7 @@ typedef Point Vector;
 
 struct Segment {
   Point p1, p2;
+  Segment(Point p1, Point p2) : p1(p1), p2(p2) {}
 };
 
 typedef Segment Line;
@@ -40,6 +48,13 @@ class Circle {
   Point c;
   double r;
   Circle(Point c = Point(), double r = 0.0) : c(c), r(r) {}
+
+  int contains(const Point &p) const {
+    double d = abs(c - p);
+    if (equals(d, r)) return 1;  // ON
+    if (d < r + EPS) return 2;   // IN
+    return 0;                    // OUT
+  }
 };
 
 typedef vector<Point> Polygon;
@@ -199,4 +214,19 @@ Polygon convexHull(Polygon s) {
   for (int i = u.size() - 2; i >= 1; --i) l.push_back(u[i]);
 
   return l;
+}
+
+Circle circumscribedCircle(const Point &a, const Point &b, const Point &c) {
+  double a1, a2, b1, b2, c1, c2;
+  a1 = 2 * (b.x - a.x);
+  b1 = 2 * (b.y - a.y);
+  c1 = a.x * a.x - b.x * b.x + a.y * a.y - b.y * b.y;
+  a2 = 2 * (c.x - a.x);
+  b2 = 2 * (c.y - a.y);
+  c2 = a.x * a.x - c.x * c.x + a.y * a.y - c.y * c.y;
+  Point p;
+  p.x = (b1 * c2 - b2 * c1) / (a1 * b2 - a2 * b1);
+  p.y = (c1 * a2 - c2 * a1) / (a1 * b2 - a2 * b1);
+
+  return Circle(p, abs(p - a));
 }
