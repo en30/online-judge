@@ -1,32 +1,29 @@
 #include <bits/stdc++.h>
 #include "../include/template"
 #include "../include/geometry.hpp"
+#include "../include/ternary_search.hpp"
 
 int N;
+vector<Point> P;
+
+double maxDist(double x, double y) {
+  Point q(x, y);
+  double res = 0;
+  rep(i, N) res = max(res, abs(q - P[i]));
+  return res;
+}
 
 int main() {
   cin >> N;
 
-  Polygon p(N);
-  rep(i, N) cin >> p[i];
+  P.resize(N);
+  rep(i, N) cin >> P[i];
 
-  double ans = 1e9;
-
-  auto update = [&](const Circle& c) {
-    rep(i, N) if (!c.contains(p[i])) return;
-    ans = min(ans, c.r);
-  };
-
-  rep(i, N) for (int j = i + 1; j < N; ++j) for (int k = j + 1; k < N; ++k) {
-    if (abs(ccw(p[i], p[j], p[k])) != 1) continue;
-    Circle c = circumscribedCircle(p[i], p[j], p[k]);
-    update(c);
-  }
-
-  rep(i, N) for (int j = i + 1; j < N; ++j) {
-    Circle c((p[i] + p[j]) / 2.0, abs(p[i] - p[j]) / 2.0);
-    update(c);
-  }
+  double ans = minimal(
+      [&](double x) {
+        return minimal([&](double y) { return maxDist(x, y); }, 0, 1e3);
+      },
+      0, 1e3);
 
   printf("%.10lf\n", ans);
 
