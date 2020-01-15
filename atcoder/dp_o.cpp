@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include "../include/template"
+#include "../include/bit_manipulation.hpp"
 #include "../include/mod.hpp"
 using mint = ModInt;
 
@@ -16,15 +17,12 @@ int main() {
   dp[0][0] = 1;
 
   rep(i, N) {
-    int s = (1 << (i + 1)) - 1;
-    while (s < (1 << N)) {
+    int s = first_fixed_size_subset(N, i + 1);
+    do {
       rep(j, N) {
         if (((s >> j) & 1) && a[i][j]) dp[i + 1][s] += dp[i][s & ~(1 << j)];
       }
-
-      int x = s & -s, y = s + x;
-      s = (((s & ~y) / x) >> 1) | y;
-    }
+    } while (next_fixed_size_subset(N, i + 1, s));
   }
 
   mint ans = 0;
