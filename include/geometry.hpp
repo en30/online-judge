@@ -1,5 +1,5 @@
 const double EPS = 1e-10;
-bool equals(double a, double b) { fabs(a - b) < EPS; }
+bool equals(double a, double b) { return fabs(a - b) < EPS; }
 
 class Point {
  public:
@@ -36,9 +36,14 @@ double norm(const Point &p) { return p.norm(); }
 
 typedef Point Vector;
 
-struct Segment {
+class Segment {
+ public:
   Point p1, p2;
+  Segment() {}
   Segment(Point p1, Point p2) : p1(p1), p2(p2) {}
+  friend istream &operator>>(istream &is, Segment &s) {
+    return is >> s.p1 >> s.p2;
+  }
 };
 
 typedef Segment Line;
@@ -110,13 +115,15 @@ double distance(Segment s1, Segment s2) {
               distanceSP(s2, s1.p1), distanceSP(s2, s1.p2)});
 }
 
-static const int COUNTER_CLOCKWISE = 1;
-static const int CLOCKWISE = -1;
-static const int ONLINE_BACK = 2;
-static const int ONLINE_FRONT = -2;
-static const int ON_SEGMENT = 0;
+enum CCW {
+  COUNTER_CLOCKWISE = 1,
+  CLOCKWISE = -1,
+  ONLINE_BACK = 2,
+  ONLINE_FRONT = -2,
+  ON_SEGMENT = 0,
+};
 
-int ccw(Point p0, Point p1, Point p2) {
+CCW ccw(Point p0, Point p1, Point p2) {
   Vector a = p1 - p0;
   Vector b = p2 - p0;
   if (cross(a, b) > EPS) return COUNTER_CLOCKWISE;
@@ -173,7 +180,7 @@ pair<Point, Point> crossPoint(Circle c1, Circle c2) {
   ON 1
   OUT 0
 */
-int contains(Polygon g, Point p) {
+int contains(const Polygon &g, Point p) {
   int n = g.size();
   bool x = false;
   for (int i = 0; i < n; ++i) {
@@ -185,26 +192,34 @@ int contains(Polygon g, Point p) {
   return (x ? 2 : 0);
 }
 
-Polygon convexHull(Polygon s) {
+Polygon convexHull(Polygon s, bool includeOnSegment = false) {
   Polygon u, l;
+
   if (s.size() < 3) return s;
   sort(s.begin(), s.end());
+
   u.push_back(s[0]);
   u.push_back(s[1]);
   l.push_back(s[s.size() - 1]);
   l.push_back(s[s.size() - 2]);
 
+  auto bad = [&](Point p1, Point p2, Point p3) {
+    if (includeOnSegment) {
+      return ccw(p1, p2, p3) == COUNTER_CLOCKWISE;
+    } else {
+      return ccw(p1, p2, p3) != CLOCKWISE;
+    }
+  };
+
   for (int i = 2; i < s.size(); ++i) {
-    for (int n = u.size(); n >= 2 && ccw(u[n - 2], u[n - 1], s[i]) != CLOCKWISE;
-         --n) {
+    for (int n = u.size(); n >= 2 && bad(u[n - 2], u[n - 1], s[i]); --n) {
       u.pop_back();
     }
     u.push_back(s[i]);
   }
 
   for (int i = s.size() - 3; i >= 0; i--) {
-    for (int n = l.size(); n >= 2 && ccw(l[n - 2], l[n - 1], s[i]) != CLOCKWISE;
-         --n) {
+    for (int n = l.size(); n >= 2 && bad(l[n - 2], l[n - 1], s[i]); --n) {
       l.pop_back();
     }
     l.push_back(s[i]);
@@ -229,4 +244,28 @@ Circle circumscribedCircle(const Point &a, const Point &b, const Point &c) {
   p.y = (c1 * a2 - c2 * a1) / (a1 * b2 - a2 * b1);
 
   return Circle(p, abs(p - a));
+}
+
+// https://en.wikipedia.org/wiki/Green's_theorem#Area_Calculation
+double area(const Polygon &p) {
+  double ans = 0;
+  const int N = p.size();
+  for (int i = 0; i < N; ++i) {
+    Point q = p[(i + 1) % N];
+    ans += (p[i].y + q.y) * (q.x - p[i].x);
+  }
+  ans /= 2.0;
+  return fabs(ans);
+}
+
+// The points must be counter-clockwise order
+bool isConvex(const Polygon &p) {
+  const int N = p.size();
+
+  for (int i = 0; i < N; ++i) {
+    Point pn = p[(i + 1) % N], pnn = p[(i + 2) % N];
+    int d = ccw(p[i], pn, pnn);
+    if (d == CLOCKWISE) return false;
+  }
+  return true;
 }
