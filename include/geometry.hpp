@@ -2,13 +2,22 @@ const double EPS = 1e-10;
 bool equals(double a, double b) { return fabs(a - b) < EPS; }
 
 class Point {
+  double add(double a, double b) const {
+    if (fabs(a + b) < EPS * (fabs(a) + fabs(b))) return 0;
+    return a + b;
+  }
+
  public:
   double x, y;
 
   Point(double x = 0, double y = 0) : x(x), y(y) {}
 
-  Point operator+(const Point &p) const { return Point(x + p.x, y + p.y); }
-  Point operator-(const Point &p) const { return Point(x - p.x, y - p.y); }
+  Point operator+(const Point &p) const {
+    return Point(add(x, p.x), add(y, p.y));
+  }
+  Point operator-(const Point &p) const {
+    return Point(add(x, -p.x), add(y, -p.y));
+  }
   Point operator*(const double a) { return Point(a * x, a * y); }
   Point operator/(const double a) { return Point(x / a, y / a); }
 
@@ -103,8 +112,8 @@ double distanceLP(Line l, Point p) {
 }
 
 double distanceSP(Segment s, Point p) {
-  if (dot(s.p2 - s.p1, p - s.p1) < 0.0) return (p - s.p1).abs();
-  if (dot(s.p1 - s.p2, p - s.p2) < 0.0) return (p - s.p2).abs();
+  if (dot(s.p2 - s.p1, p - s.p1) < -EPS) return (p - s.p1).abs();
+  if (dot(s.p1 - s.p2, p - s.p2) < -EPS) return (p - s.p2).abs();
   return distanceLP(s, p);
 }
 
@@ -268,4 +277,40 @@ bool isConvex(const Polygon &p) {
     if (d == CLOCKWISE) return false;
   }
   return true;
+}
+
+// Rotating calipers or Shamos's algorithm
+pair<Point, Point> farthestPoints(const Polygon &p) {
+  Polygon ch = convexHull(p);
+
+  int n = ch.size();
+  if (n == 2) return make_pair(ch[0], ch[1]);
+  int i = 0, j = 0;
+  for (int k = 0; k < n; ++k) {
+    if (!(ch[i] < ch[k])) i = k;
+    if (ch[j] < ch[k]) j = k;
+  }
+
+  pair<Point, Point> res;
+  double d = 0;
+  int si = i, sj = j;
+  while (i != sj || j != si) {
+    double cd = abs(ch[i] - ch[j]);
+    if (cd > d) {
+      d = cd;
+      res = make_pair(ch[i], ch[j]);
+    }
+
+    if (cross(ch[(i + 1) % n] - ch[i], ch[(j + 1) % n] - ch[j]) < 0) {
+      i = (i + 1) % n;
+    } else {
+      j = (j + 1) % n;
+    }
+  }
+  return res;
+}
+
+double diameter(const Polygon &p) {
+  pair<Point, Point> pts = farthestPoints(p);
+  return abs(pts.first - pts.second);
 }
