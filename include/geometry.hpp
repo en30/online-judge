@@ -142,6 +142,11 @@ CCW ccw(Point p0, Point p1, Point p2) {
   return ON_SEGMENT;                             // p0, p2, p1
 }
 
+bool onLine(Line l, Point p) {
+  int c = ccw(l.p1, l.p2, p);
+  return c != CLOCKWISE && c != COUNTER_CLOCKWISE;
+}
+
 bool intersect(Point p1, Point p2, Point p3, Point p4) {
   return (ccw(p1, p2, p3) * ccw(p1, p2, p4) <= 0 &&
           ccw(p3, p4, p1) * ccw(p3, p4, p2) <= 0);
@@ -151,11 +156,12 @@ bool intersect(Segment s1, Segment s2) {
   return intersect(s1.p1, s1.p2, s2.p1, s2.p2);
 }
 
-Point crossPoint(Segment s1, Segment s2) {
+Point crossPoint(Line s1, Line s2) {
+  assert(!isParallel(s1, s2));
   Vector base = s2.p2 - s2.p1;
-  double d1 = abs(cross(base, s1.p1 - s2.p1));
-  double d2 = abs(cross(base, s1.p2 - s2.p1));
-  double t = d1 / (d1 + d2);
+  double d1 = cross(base, s2.p1 - s1.p1);
+  double d2 = cross(base, s1.p2 - s1.p1);
+  double t = d1 / d2;
   return s1.p1 + (s1.p2 - s1.p1) * t;
 }
 
@@ -313,4 +319,36 @@ pair<Point, Point> farthestPoints(const Polygon &p) {
 double diameter(const Polygon &p) {
   pair<Point, Point> pts = farthestPoints(p);
   return abs(pts.first - pts.second);
+}
+
+Polygon convexCut(const Polygon &p, const Line &l) {
+  const int n = p.size();
+  Polygon res;
+
+  for (int i = 0; i < n; ++i) {
+    int j = (i + 1) % n;
+    Segment s = Segment(p[i], p[j]);
+
+    if (isParallel(s, l)) continue;
+    Point q = crossPoint(s, l);
+    if (ccw(p[i], p[j], q) != ON_SEGMENT) continue;
+    if (cross(l.p2 - l.p1, s.p2 - s.p1) < EPS) continue;
+    res.push_back(q);
+
+    for (;; j = (j + 1) % n) {
+      res.push_back(p[j]);
+      Segment s = Segment(p[j], p[(j + 1) % n]);
+      if (isParallel(s, l)) continue;
+
+      Point q = crossPoint(Segment(p[j], p[(j + 1) % n]), l);
+      if (ccw(p[j], p[(j + 1) % n], q) != ON_SEGMENT) continue;
+      if (cross(l.p2 - l.p1, s.p2 - s.p1) > -EPS) continue;
+      res.push_back(q);
+      return res;
+    }
+  }
+
+  // no intersection
+  if (ccw(l.p1, l.p2, p[0]) == COUNTER_CLOCKWISE) return p;
+  return res;
 }
