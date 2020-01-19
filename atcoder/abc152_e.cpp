@@ -14,7 +14,7 @@ int main() {
   rep(i, N) {
     auto facts = t.factorize(A[i]);
     for (auto it = facts.begin(); it != facts.end(); it++) {
-      lcm[it->first] = max(lcm[it->first], it->second);
+      chmax(lcm[it->first], it->second);
     }
   }
 
