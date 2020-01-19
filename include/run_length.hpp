@@ -4,19 +4,19 @@ class RunLength {
   struct Element {
     T value;
     int count;
+    Element(T value, int count) : value(value), count(count) {}
   };
 
   static vector<Element> compress(auto& s) {
     vector<Element> res;
     if (s.size() == 0) return res;
 
-    int cnt = 0;
+    res.emplace_back(s[0], 0);
     for (int i = 0; i < s.size(); ++i) {
-      if (i == s.size() - 1 || s[i] != s[i + 1]) {
-        res.push_back(Element{s[i], cnt});
-        cnt = 1;
+      if (res.back().value == s[i]) {
+        res.back().count++;
       } else {
-        ++cnt;
+        res.emplace_back(s[i], 1);
       }
     }
 
