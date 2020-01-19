@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #include "../include/template"
 #include "../include/mod.hpp"
+#include "../include/prime.hpp"
 
 int main() {
   int N;
@@ -8,23 +9,12 @@ int main() {
   vector<int> A(N);
   rep(i, N) cin >> A[i];
 
-  vector<unordered_map<int, int>> B(N);
+  PrimeTable t(*max_element(all(A)));
   unordered_map<int, int> lcm;
-  rep(j, N) {
-    int m = A[j];
-    for (int i = 2; i * i <= m; i++) {
-      if (m % i) continue;
-      int r = 0;
-      while (m % i == 0) {
-        m /= i;
-        r++;
-      }
-      B[j][i] = r;
-      lcm[i] = max(lcm[i], r);
-    }
-    if (m != 1) {
-      B[j][m] = 1;
-      lcm[m] = max(lcm[m], 1);
+  rep(i, N) {
+    auto facts = t.factorize(A[i]);
+    for (auto it = facts.begin(); it != facts.end(); it++) {
+      lcm[it->first] = max(lcm[it->first], it->second);
     }
   }
 
