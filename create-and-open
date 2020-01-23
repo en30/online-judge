@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if [ ! -e "$1" ]; then
+  cp "$(dirname "$0")/file-template.cpp" "$1"
+fi
+
+echo "$(basename $1)" | pbcopy
+clion --line 1 "$1"
