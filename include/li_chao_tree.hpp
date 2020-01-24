@@ -1,3 +1,8 @@
+/**
+ * @brief <a href="https://scrapbox.io/en30/Convex_Hull_Trick">Convex Hull
+ * Trick</a>のためのデータ構造
+ * @tparam T x, yの型
+ */
 template <typename T>
 class LiChaoTree {
   class Line {
@@ -15,7 +20,7 @@ class LiChaoTree {
   int V() { return 2 * N - 1; }
 
   // [l, r)
-  void insert(int i, int l, int r, Line& line) {
+  void _insert(int i, int l, int r, Line& line) {
     T xl = xs[l], xr = xs[r - 1];
     if (nodes[i].y(xl) <= line.y(xl) && nodes[i].y(xr) <= line.y(xr)) return;
     if (nodes[i].y(xl) > line.y(xl) && nodes[i].y(xr) > line.y(xr)) {
@@ -35,6 +40,9 @@ class LiChaoTree {
   }
 
  public:
+  /**
+   * @param x 直線群の最小値を計算したいx座標
+   */
   LiChaoTree(const vector<T>& x) : xs(x) {
     N = 1;
     while (N < xs.size()) N <<= 1;
@@ -43,11 +51,20 @@ class LiChaoTree {
     nodes.resize(V(), Line(0, 1e32));
   }
 
+  /**
+   * @brief 直線の追加 O(logN)
+   * @param gradients 傾き
+   * @param intercepts 切片
+   */
   void insert(T gradients, T intercepts) {
     Line line = Line(gradients, intercepts);
-    insert(0, 0, N, line);
+    _insert(0, 0, N, line);
   }
 
+  /**
+   * @brief 初期化時に渡したx[i]での直線群の最小値 O(logN)
+   * @param i xのindex
+   */
   T y(int i) {
     T x = xs[i];
     i += N - 1;
