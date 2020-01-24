@@ -22,7 +22,8 @@ int main() {
   ll ans = 0;
   rep(i, R) {
     int t = K - rc[i];
-    ans += distance(lower_bound(all(ccs), t), upper_bound(all(ccs), t));
+    auto p = equal_range(all(ccs), t);
+    ans += p.second - p.first;
   }
 
   for (auto& c : candies) {
