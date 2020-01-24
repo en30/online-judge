@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require "open3"
 
 INCLUDE_PATTERN = %r{^#include\s+"../include/([^/]*?)"$}
 
@@ -8,7 +9,13 @@ res = File.read(file)
 
 while res.match?(INCLUDE_PATTERN)
   res.gsub!(INCLUDE_PATTERN) do
-    File.read(File.expand_path("../include/" + $1, __FILE__)).chomp
+    path = File.expand_path("../include/" + $1, __FILE__)
+    if File.extname(path) == ".hpp"
+      o, e, s = Open3.capture3("gcc -fpreprocessed -dD -E #{path}")
+      o.sub(/\A# \d+ .*?\n/, "").gsub(/\n{3,}/m, "\n")
+    else
+      File.read(path)
+    end
   end
 end
 
