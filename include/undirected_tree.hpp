@@ -16,18 +16,21 @@ class UndirectedTree {
     ++_E;
   }
 
-  void scanFrom(std::istream& strm, int base = 0) {
-    strm >> _V;
+  void scanFrom(std::istream& strm, int base = 1) {
+    if (_V == 0) strm >> _V;
     _adjacencyList.resize(_V);
     for (int i = 0; i < _V - 1; ++i) {
       int u, v;
       strm >> u >> v;
       if (base == 1) --u, --v;
+      assert(0 <= u < _V);
+      assert(0 <= v < _V);
       addEdge(u, v);
     }
     assert(_E == _V - 1);
   }
 
+  vector<int> operator[](int u) const { return _adjacencyList[u]; }
   vector<vector<int>>& adjacencyList() { return _adjacencyList; }
 };
 
