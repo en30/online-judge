@@ -1,48 +1,16 @@
 #include <bits/stdc++.h>
 #include "../include/template"
+#include "../include/dijkstra.hpp"
 
 ll x;
 
 const ll INF = 1e18;
 
-struct edge {
-  int to;
+struct Edge {
+  int from, to;
   bool white;
-  ll cost() { return white ? 1LL : x; };
+  ll weight() { return white ? 1LL : x; };
 };
-
-struct node {
-  int id;
-  ll distance;
-  node(int id, ll distance) : id(id), distance(distance) {}
-  bool operator<(const node &theOther) const {
-    return distance < theOther.distance;
-  }
-  bool operator>(const node &theOther) const {
-    return distance > theOther.distance;
-  }
-};
-
-vector<ll> dijkstra(vector<vector<edge>> &G, int source) {
-  int V = G.size();
-  vector<ll> distance(V, INF);
-  priority_queue<node, vector<node>, greater<node>> que;
-  distance[source] = 0;
-  que.push(node(source, 0));
-
-  while (!que.empty()) {
-    node n = que.top();
-    que.pop();
-    if (distance[n.id] < n.distance) continue;
-    for (edge &e : G[n.id]) {
-      if (distance[e.to] > distance[n.id] + e.cost()) {
-        distance[e.to] = distance[n.id] + e.cost();
-        que.push(node(e.to, distance[e.to]));
-      }
-    }
-  }
-  return distance;
-}
 
 int main() {
   int H, W;
@@ -52,14 +20,14 @@ int main() {
   rep(i, H) cin >> grid[i];
 
   int V = H * W;
-  vector<vector<edge>> G(V);
+  Digraph<Edge> G(V);
 
   auto id = [&](int i, int j) { return i * W + j; };
   assert(id(0, 0) == 0);
   assert(id(H - 1, W - 1) == V - 1);
 
   auto addEdge = [&](int u, int v, bool white) {
-    G[u].push_back(edge{v, white});
+    G.addEdge(Edge{u, v, white});
   };
 
   int s, t;
@@ -75,7 +43,8 @@ int main() {
   ll l = 1, r = 1e9;
   while (r - l > 1) {
     x = (l + r) / 2;
-    if (dijkstra(G, s)[t] <= T) {
+    Dijkstra<ll, Edge> d(G, s);
+    if (d.distTo(t) <= T) {
       l = x;
     } else {
       r = x;

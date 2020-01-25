@@ -7,10 +7,11 @@ int K;
 int main() {
   cin >> K;
 
-  EdgeWeightedDigraph<int> G(K);
+  using Edge = WeightedEdge<int>;
+  Digraph<Edge> G(K);
   rep(i, K) {
-    G.addEdge(i, (i + 1) % K, 1);
-    G.addEdge(i, (i * 10) % K, 0);
+    G.addEdge(Edge(i, (i + 1) % K, 1));
+    G.addEdge(Edge(i, (i * 10) % K, 0));
   }
 
   Dijkstra<int> d(G, 1);

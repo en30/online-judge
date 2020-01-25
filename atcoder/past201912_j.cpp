@@ -12,13 +12,14 @@ int main() {
   rep(i, H) rep(j, W) cin >> A[i][j];
 
   int V = H * W;
-  EdgeWeightedDigraph<ll> G(V);
+  using Edge = WeightedEdge<ll>;
+  Digraph<Edge> G(V);
 
   auto index = [&](int i, int j) { return i * W + j; };
 
   auto connect = [&](int i, int j, int i2, int j2) {
-    G.addEdge(index(i, j), index(i2, j2), A[i][j] + A[i2][j2]);
-    G.addEdge(index(i2, j2), index(i, j), A[i][j] + A[i2][j2]);
+    G.addEdge(Edge(index(i, j), index(i2, j2), A[i][j] + A[i2][j2]));
+    G.addEdge(Edge(index(i2, j2), index(i, j), A[i][j] + A[i2][j2]));
   };
 
   rep(i, H) rep(j, W) {

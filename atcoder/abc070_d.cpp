@@ -6,12 +6,18 @@ int main() {
   int N, K, Q;
   cin >> N;
 
-  EdgeWeightedDigraph G(N, 2 * (N - 1));
-  cin >> G;
+  using Edge = WeightedEdge<ll>;
+  Digraph<Edge> G(N, 2 * (N - 1));
+  rep(i, N - 1) {
+    Edge e;
+    cin >> e;
+    G.addEdge(e);
+    G.addEdge(e.reverse());
+  }
 
   cin >> Q >> K;
   K--;
-  Dijkstra d(G, K);
+  Dijkstra<ll> d(G, K);
 
   rep(i, Q) {
     int x, y;
