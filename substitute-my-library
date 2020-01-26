@@ -1,22 +1,3 @@
-#!/usr/bin/env ruby
-require "open3"
+#!/usr/bin/env bash
 
-INCLUDE_PATTERN = %r{^#include\s+"../include/([^/]*?)"$}
-
-file = ARGV[0]
-
-res = File.read(file)
-
-while res.match?(INCLUDE_PATTERN)
-  res.gsub!(INCLUDE_PATTERN) do
-    path = File.expand_path("../include/" + $1, __FILE__)
-    if File.extname(path) == ".hpp"
-      o, e, s = Open3.capture3("gcc -fpreprocessed -dD -E #{path}")
-      o.sub(/\A# \d+ .*?\n/, "").gsub(/\n{3,}/m, "\n")
-    else
-      File.read(path)
-    end
-  end
-end
-
-puts res
+g++ -E -Dinclude='#include' -I. -I"$(dirname $0)/include/system-dummy" "$1" | grep -v '^# [0-9]' | sed -E 's/^ #include/#include/g' | ruby -e 'puts STDIN.read.gsub(/\n{3,}/m, "\n")'
