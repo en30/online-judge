@@ -5,13 +5,15 @@ int main() {
   int N;
   cin >> N;
 
-  vector<int> R(N + 1, 0);
-  rep(i, N) cin >> R[i + 1];
-  sort(all(R));
+  vector<int> R(N);
+  rep(i, N) cin >> R[i];
+  sort(R.rbegin(), R.rend());
 
   double ans = 0;
   rep(i, N) {
-    if ((N - i) % 2) ans += R[i + 1] * R[i + 1] - R[i] * R[i];
+    double s = R[i] * R[i];
+    if (i % 2) s = -s;
+    ans += s;
   }
   ans *= M_PI;
 

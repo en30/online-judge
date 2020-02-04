@@ -4,13 +4,12 @@
 int N;
 vector<vector<int>> G;
 
-int dfs(int v, int p) {
-  if (G[v].size() == 1 && G[v][0] == p) return 1;
+int dfs(int v) {
+  if (G[v].size() == 0) return 1;
 
   int l = 1e9, r = 0;
   for (int u : G[v]) {
-    if (u == p) continue;
-    int s = dfs(u, v);
+    int s = dfs(u);
     chmin(l, s);
     chmax(r, s);
   }
@@ -24,10 +23,9 @@ int main() {
     int B;
     cin >> B;
     --B;
-    G[i + 1].push_back(B);
     G[B].push_back(i + 1);
   }
 
-  cout << dfs(0, -1) << endl;
+  cout << dfs(0) << endl;
   return 0;
 }

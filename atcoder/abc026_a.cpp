@@ -4,11 +4,8 @@
 int main() {
   int A;
   cin >> A;
-  int ans = 0;
-  for (int i = 1; i < A; ++i) {
-    chmax(ans, i * (A - i));
-  }
-
+  int ans = A / 2;
+  ans *= ans;
   cout << ans << endl;
   return 0;
 }
