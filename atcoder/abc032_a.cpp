@@ -1,14 +1,11 @@
 #include <bits/stdc++.h>
 #include "../include/template"
+#include "../include/gcd.hpp"
 
 int main() {
   int a, b, n;
   cin >> a >> b >> n;
-  for (int i = n;; ++i) {
-    if (i % a == 0 && i % b == 0) {
-      cout << i << endl;
-      break;
-    }
-  }
+  int m = lcm(a, b);
+  cout << m * ((n + m - 1) / m) << endl;
   return 0;
 }
