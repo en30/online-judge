@@ -13,15 +13,9 @@ int main() {
   dp[0][0][0] = 1;
 
   rep(i, M) rep(j, K + 1) rep(k, 2) {
-    int nd = N[i] - '0';
-    rep(d, 10) {
-      int ni = i + 1, nj = j, nk = k;
-      if (d != 0) ++nj;
-      if (k == 0) {
-        if (d > nd) continue;
-        if (d < nd) nk = 1;
-      }
-      dp[ni][nj][nk] += dp[i][j][k];
+    int d = N[i] - '0';
+    rep(l, (k ? 10 : d + 1)) {
+      dp[i + 1][j + (l != 0)][k | (l < d)] += dp[i][j][k];
     }
   }
 
