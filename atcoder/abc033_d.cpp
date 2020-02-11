@@ -23,25 +23,14 @@ int main() {
     }
 
     sort(all(args));
+    int M = args.size();
+    rep(i, M) args.push_back(args[i] + 2 * PI);
 
-    for (double theta : args) {
-      double r1 = theta + PI / 2.0, r2 = r1 + PI;
-      if (r1 <= PI && PI < r2) {
-        r2 -= 2 * PI;
-        right += rangeCount(args, r1 - EPS, r1 + EPS);
-        obtuse += rangeCount(args, r1 + EPS, 2 * PI);
-        obtuse += rangeCount(args, -2 * PI, r2 - EPS);
-        right += rangeCount(args, r2 - EPS, r2 + EPS);
-      } else {
-        if (r1 > PI) {
-          r1 -= 2.0 * PI;
-          r2 -= 2.0 * PI;
-        }
-
-        right += rangeCount(args, r1 - EPS, r1 + EPS);
-        obtuse += rangeCount(args, r1 + EPS, r2 - EPS);
-        right += rangeCount(args, r2 - EPS, r2 + EPS);
-      }
+    rep(i, M) {
+      double r1 = args[i] + PI / 2.0, r2 = r1 + PI;
+      right += rangeCount(args, r1 - EPS, r1 + EPS);
+      obtuse += rangeCount(args, r1 + EPS, r2 - EPS);
+      right += rangeCount(args, r2 - EPS, r2 + EPS);
     }
   }
 
