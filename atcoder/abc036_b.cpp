@@ -6,10 +6,11 @@ int main() {
   cin >> N;
   vector<string> s(N);
   rep(i, N) cin >> s[i];
-  rep(j, N) {
-    rep(i, N) cout << s[N - 1 - i][j];
-    cout << endl;
-  }
+
+  vector<string> t(N, string(N, ' '));
+  rep(i, N) rep(j, N) t[j][N - 1 - i] = s[i][j];
+
+  rep(i, N) cout << t[i] << endl;
 
   return 0;
 }
