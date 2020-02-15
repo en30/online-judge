@@ -1,18 +1,18 @@
 #include <bits/stdc++.h>
 #include "../include/template"
+#include "../include/cumulative_sum.hpp"
 
 int main() {
   int N, K;
   cin >> N >> K;
-  vector<ll> a(N), c(N + 1, 0);
+  vector<ll> a(N);
   rep(i, N) cin >> a[i];
-  for (int i = 0; i < N - K + 1; ++i) {
-    c[i] += 1;
-    c[i + K] -= 1;
-  }
-  rep(i, N) c[i + 1] += c[i];
+
+  CumulativeSum<ll> S(a);
   ll ans = 0;
-  rep(i, N) ans += a[i] * c[i];
+  for (int i = 0; i + K <= N; ++i) {
+    ans += S.query(i, i + K);
+  }
   cout << ans << endl;
 
   return 0;

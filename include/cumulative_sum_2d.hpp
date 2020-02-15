@@ -1,9 +1,11 @@
+#pragma once
+
 template <typename T>
-class CummulativeSum2D {
+class CumulativeSum2D {
   vector<vector<T>> S;
 
  public:
-  CummulativeSum2D(const vector<vector<T>>& a) {
+  CumulativeSum2D(const vector<vector<T>>& a) {
     int n = a.size(), m = a[0].size();
     S.resize(n + 1, vector<T>(m + 1, 0));
     for (int i = 0; i < n; ++i) {

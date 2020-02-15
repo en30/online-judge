@@ -1,9 +1,11 @@
+#pragma once
+
 template <typename T>
-class CummulativeSum {
+class CumulativeSum {
   vector<T> S;
 
  public:
-  CummulativeSum(const vector<T>& a) {
+  CumulativeSum(const vector<T>& a) {
     int n = a.size();
     S.resize(n + 1, 0);
     for (int i = 0; i < n; ++i) {
