@@ -17,9 +17,9 @@ class Grid {
   vector<Pos> neighbor(int i, int j, const vector<int>& dis,
                        const vector<int>& djs) const {
     vector<Pos> res;
-    for (int di : dis)
-      for (int dj : djs)
-        if (in(i + di, j + dj)) res.emplace_back(i + di, j + dj);
+    for (int k = 0; k < dis.size(); ++k) {
+      if (in(i + dis[k], j + djs[k])) res.emplace_back(i + dis[k], j + djs[k]);
+    }
     return res;
   }
 
