@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 #include "../include/template"
-#include "../include/segment_tree.hpp"
+#include "../include/lis.hpp"
 
 struct Box {
   int i, w, h;
@@ -22,16 +22,9 @@ int main() {
     return a.h == b.h ? a.w > b.w : a.h < b.h;
   });
 
-  SegmentTree<int> seg(
-      W + 1, [](int a, int b) { return max(a, b); }, 0);
-  int ans = 1;
-  rep(i, N) {
-    int d = seg.query(0, B[i].w) + 1;
-    seg.update(B[i].w, d);
-    chmax(ans, d);
-  }
-
-  cout << ans << endl;
+  vector<int> w(N);
+  rep(i, N) w[i] = B[i].w;
+  cout << lis(w, true) << endl;
 
   return 0;
 }
