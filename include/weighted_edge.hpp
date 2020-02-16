@@ -13,7 +13,7 @@ struct WeightedEdge {
     if (base == 1) --from, --to;
   }
 
-  T weight() { return _weight; }
+  T weight() const { return _weight; }
 
   WeightedEdge reverse() const { return WeightedEdge(to, from, _weight); }
 };

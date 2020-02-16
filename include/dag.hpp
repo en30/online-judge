@@ -1,8 +1,14 @@
+#pragma once
+
 class DAG {
  public:
   vector<int> topologicalSorted;
   bool valid;
 
+  /**
+   * @brief DAG判定とトポロジカルソートをする O(V + E)
+   * @param G
+   */
   DAG(const vector<vector<int>>& G) {
     int V = G.size();
     vector<int> inDegree(G.size(), 0);
