@@ -20,6 +20,17 @@ class Digraph {
     ++_E;
   }
 
+  void addUndirectedEdge(const Edge& e) {
+    _adjacencyList[e.from].push_back(e);
+    _adjacencyList[e.to].push_back(e.reverse());
+    ++_E;
+  }
+
+  void addNode() {
+    ++_V;
+    _adjacencyList.push_back(vector<Edge>());
+  }
+
   void scanFrom(std::istream& strm, int base = 1) {
     if (_V == 0) strm >> _V;
     if (_E == 0) strm >> _E;
