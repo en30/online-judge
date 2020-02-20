@@ -19,24 +19,18 @@ int main() {
     return 0;
   }
 
-  const ll INF = 1e18;
-  auto find = [&](ll k, ll l, ll r) {
-    ll vl = f(r, n);
-    if (vl % k != s % k) return INF;
-    ll vr = f(l + 1, n);
-    if (vl <= s && s <= vr) return r - (s - vl) / k;
-    return INF;
-  };
-
-  ll ans = INF;
-  ll i = 1;
-
-  while (n / (i + 1) != 0 && n / (i + 1) != n / i) {
-    chmin(ans, find(i, n / (i + 1), n / i));
-    ++i;
+  for (ll b = 2; b <= sqrt(n); ++b) {
+    if (f(b, n) == s) {
+      cout << b << endl;
+      return 0;
+    }
   }
-  for (ll j = n / i; j >= 2; --j) {
-    if (f(j, n) == s) ans = j;
+
+  const ll INF = 1e18;
+  ll ans = INF;
+  for (ll p = 1; p < sqrt(n); ++p) {
+    ll b = (n - s) / p + 1;
+    if (b > 1 && f(b, n) == s) chmin(ans, b);
   }
 
   cout << (ans == INF ? -1 : ans) << endl;

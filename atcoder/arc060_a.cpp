@@ -5,16 +5,21 @@ int main() {
   int N, A;
   cin >> N >> A;
   vector<int> x(N);
-  rep(i, N) cin >> x[i];
-
-  vector<vector<ll>> dp(N + 1, vector<ll>(A * N + 1, 0));
-  dp[0][0] = 1;
-  rep(i, N) for (int j = N; j >= 0; --j) for (int k = A * N; k >= 0; --k) {
-    if (j + 1 <= N && k + x[i] <= A * N) dp[j + 1][k + x[i]] += dp[j][k];
+  rep(i, N) {
+    cin >> x[i];
+    x[i] = A - x[i];
   }
 
-  ll ans = 0;
-  for (int n = 1; n <= N; ++n) ans += dp[n][n * A];
-  cout << ans << endl;
+  int M = 101, zero = 50 * N;
+  // [-50, +50]
+  vector<vector<ll>> dp(N + 1, vector<ll>(M * N + 1, 0));
+  dp[0][zero] = 1;
+  rep(i, N) rep(j, N * M + 1) {
+    dp[i + 1][j] = dp[i][j];
+    int pj = j - x[i];
+    if (0 <= pj && pj <= N * M) dp[i + 1][j] += dp[i][pj];
+  }
+
+  cout << dp[N][zero] - 1 << endl;
   return 0;
 }
