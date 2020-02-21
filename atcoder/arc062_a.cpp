@@ -9,19 +9,14 @@ int main() {
 
   ll t = T[0], a = A[0];
   for (int i = 1; i < N; ++i) {
-    ll kt = (t + T[i] - 1) / T[i], ka = (a + A[i] - 1) / A[i];
-    if (kt * A[i] < a) {
-      t = T[i] * ka;
-      a = A[i] * ka;
-      continue;
-    }
-    if (ka * T[i] < t) {
-      t = T[i] * kt;
-      a = A[i] * kt;
-      continue;
-    }
-    t = T[i] * min(ka, kt);
-    a = A[i] * min(ka, kt);
+    int r = [&]() {
+      ll kt = (t + T[i] - 1) / T[i], ka = (a + A[i] - 1) / A[i];
+      if (kt * A[i] < a) return ka;
+      if (ka * T[i] < t) return kt;
+      return min(ka, kt);
+    }();
+    t = T[i] * r;
+    a = A[i] * r;
   }
 
   cout << t + a << endl;
