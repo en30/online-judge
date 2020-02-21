@@ -24,6 +24,10 @@ class Grid {
   }
 
  public:
+  static bool in(int H, int W, int i, int j) {
+    return 0 <= i && i < H && 0 <= j && j < W;
+  }
+
   Grid(int H, int W) : H(H), W(W) { G.resize(H, vector<T>(W)); }
 
   vector<T>& operator[](int i) { return G[i]; }

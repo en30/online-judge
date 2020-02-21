@@ -8,14 +8,16 @@ int main() {
   ll ans = 0;
   const int N = S.size() - 1;
   rep(s, (1 << N)) {
-    int j = -1;
-    rep(i, N) {
-      if ((s >> i) & 1) {
-        ans += stoll(S.substr(j + 1, i - j));
-        j = i;
+    ll v = 0;
+    rep(i, N + 1) {
+      v *= 10;
+      v += S[i] - '0';
+      if (i < N && ((s >> i) & 1)) {
+        ans += v;
+        v = 0;
       }
     }
-    ans += stoll(S.substr(j + 1, N - j));
+    ans += v;
   }
 
   cout << ans << endl;
