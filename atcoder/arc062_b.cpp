@@ -6,16 +6,8 @@ int main() {
   cin >> s;
 
   const int N = s.size();
-  int ans = 0;
-  rep(i, N) {
-    if (i % 2) {
-      ans += (s[i] == 'g' ? 1 : 0);
-    } else {
-      ans += (s[i] == 'g' ? 0 : -1);
-    }
-  }
-
-  cout << ans << endl;
+  const int P = count(all(s), 'p');
+  cout << N / 2 - P << endl;
 
   return 0;
 }
