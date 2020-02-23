@@ -6,21 +6,23 @@ int main() {
   ll N;
   cin >> N;
 
-  unordered_map<ll, unordered_map<ll, ModInt>> memo;
+  vector<int> d;
+  for (ll m = N; m != 0; m /= 2) {
+    d.push_back(m % 2);
+  }
+  reverse(all(d));
 
-  function<ModInt(ll, ll)> rec = [&](ll s, ll x) {
-    if (memo[s].find(x) != memo[s].end()) return memo[s][x];
-    if (s == 0) return ModInt(1);
-    if (s == 1) {
-      if (x == 0) return ModInt(1);
-      return ModInt(2);
-    }
+  const int D = d.size();
+  vector<vector<ModInt>> dp(D + 1, vector<ModInt>(3, 0));
+  dp[0][0] = 1;
 
-    return memo[s][x] = rec(s / 2, x / 2) + rec((s - 1) / 2, (x - 1) / 2) +
-                        rec((s - 2) / 2, x / 2);
-  };
+  rep(i, D) rep(j, 3) rep(ab, 3) {
+    // ab: (0, 0), (0, 1), (1, 1)
+    int delta = j * 2 + d[i] - ab;
+    if (delta >= 0) dp[i + 1][min(2, delta)] += dp[i][j];
+  }
 
-  cout << rec(N, N) << endl;
+  cout << accumulate(all(dp[D]), ModInt(0)) << endl;
 
   return 0;
 }

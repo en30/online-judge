@@ -14,28 +14,13 @@ int main() {
   }
 
   auto ans = [&]() -> ll {
-    ModInt res = 1;
-    if (N % 2 == 0) {
-      rep(i, N) {
-        if (i % 2 == 0) {
-          if (C[i] != 0) return 0;
-        } else {
-          if (C[i] != 2) return 0;
-          res *= C[i];
-        }
-      }
-    } else {
-      rep(i, N) {
-        if (i % 2 == 0) {
-          if (i == 0 && C[i] != 1) return 0;
-          if (i != 0 && C[i] != 2) return 0;
-          res *= C[i];
-        } else {
-          if (C[i] != 0) return 0;
-        }
-      }
+    rep(i, N) {
+      if (i == 0 && (N % 2) && C[i] == 1) continue;
+      if (((N % 2) ^ (i % 2)) && C[i] == 2) continue;
+      if (C[i] == 0) continue;
+      return 0;
     }
-    return res.val();
+    return ModInt(2).pow(N / 2).val();
   };
 
   cout << ans() << endl;
