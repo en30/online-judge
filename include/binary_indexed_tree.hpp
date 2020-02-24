@@ -8,7 +8,7 @@ class BinaryIndexedTree {
   vector<T> bit;
 
  public:
-  BinaryIndexedTree(int N) : N(N) { bit.resize(N, 0); };
+  BinaryIndexedTree(int N) : N(N) { bit.resize(N + 1, 0); };
 
   /**
    * @brief [0, i)の和を求める
@@ -18,9 +18,9 @@ class BinaryIndexedTree {
   T sum(int i) {
     i -= 1;
     T s = 0;
-    while (i > 0) {
+    while (i >= 0) {
       s += bit[i];
-      i -= i & -i;
+      i = (i & (i + 1)) - 1;
     }
     return s;
   }
@@ -39,9 +39,9 @@ class BinaryIndexedTree {
    * @param x
    */
   void add(int i, T x) {
-    while (i <= N) {
+    while (i < N) {
       bit[i] += x;
-      i += i & -i;
+      i |= i + 1;
     }
   }
 };

@@ -33,4 +33,6 @@ class CoordinateCompression {
    * @return
    */
   T uncompress(int i) { return reverse[i]; }
+
+  int size() { return compressed.size(); }
 };
