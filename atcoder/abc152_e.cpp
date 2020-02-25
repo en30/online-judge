@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #include "../include/template"
 #include "../include/mod.hpp"
-#include "../include/prime.hpp"
+#include "../include/prime_table.hpp"
 
 int main() {
   int N;
