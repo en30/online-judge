@@ -7,14 +7,21 @@ int main() {
   string S;
   cin >> S;
 
-  vector<vector<bool>> dp(4, vector<bool>(1000, false));
-  dp[0][0] = true;
-  rep(i, N) for (int j = 2; j >= 0; --j) for (int k = 99; k >= 0; --k) {
-    if (!dp[j][k]) continue;
-    dp[j + 1][k * 10 + (S[i] - '0')] = true;
+  vector<int> lindex(10, N - 1), rindex(10, 0);
+  vector<vector<int>> T(N + 1, vector<int>(10, 0));
+  rep(i, N) {
+    int s = S[i] - '0';
+    chmin(lindex[s], i);
+    chmax(rindex[s], i);
+    rep(j, 10) T[i + 1][j] = T[i][j] + (j == s);
   }
 
-  cout << accumulate(all(dp[3]), 0) << endl;
+  int ans = 0;
+  rep(l, 10) rep(r, 10) rep(k, 10) {
+    ans += (T[rindex[r]][k] - T[lindex[l] + 1][k] > 0);
+  }
+
+  cout << ans << endl;
 
   return 0;
 }
