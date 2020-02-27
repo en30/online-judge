@@ -1,17 +1,6 @@
 #include <bits/stdc++.h>
 #include "../include/template"
-
-struct Point {
-  int x, y;
-  Point(int x = 0, int y = 0) : x(x), y(y) {}
-  bool operator<(const Point& that) const {
-    return x == that.x ? y < that.y : x < that.x;
-  }
-  Point operator+(const Point& p) const { return Point(x + p.x, y + p.y); }
-  Point operator-(const Point& p) const { return Point(x - p.x, y - p.y); }
-  Point operator-() const { return Point(-x, -y); }
-  int norm() const { return x * x + y * y; }
-};
+#include "../include/integer_geometry.hpp"
 
 int main() {
   int N;
@@ -23,20 +12,15 @@ int main() {
 
   int ans = 0;
 
-  auto r1 = [](const Point& p) { return Point(-p.y, p.x); };
-  auto r2 = [](const Point& p) { return Point(p.y, -p.x); };
-  auto contains = [&](const Point& p) {
-    auto r = equal_range(all(P), p);
-    return r.first != r.second;
-  };
+  auto contains = [&](const Point& p) { return binary_search(all(P), p); };
 
   rep(i, N) rep(j, N) {
     if (i == j) continue;
 
     auto rel = P[j] - P[i];
-    Point p1 = P[i] + r1(rel), p2 = P[j] + r2(-rel);
+    Point p1 = P[i] + rel.rotate90(), p2 = P[j] - rel.rotate270();
     if (contains(p1) && contains(p2)) chmax(ans, rel.norm());
-    p1 = P[i] + r2(rel), p2 = P[j] + r1(-rel);
+    p1 = P[i] + rel.rotate270(), p2 = P[j] - rel.rotate90();
     if (contains(p1) && contains(p2)) chmax(ans, rel.norm());
   }
 
