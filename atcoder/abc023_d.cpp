@@ -1,39 +1,35 @@
 #include <bits/stdc++.h>
 #include "../include/template"
-#include "../include/counting_sort.hpp"
-
-struct Balloon {
-  ll H, S;
-};
 
 int main() {
   int N;
   cin >> N;
-  vector<Balloon> B(N);
-  rep(i, N) cin >> B[i].H >> B[i].S;
+  vector<ll> H(N), S(N);
+  rep(i, N) cin >> H[i] >> S[i];
 
-  auto achievable = [&](ll s) {
-    vector<int> ts(N);
+  auto achievable = [&](ll x) {
+    vector<int> c(N, 0);
     rep(i, N) {
-      if (s - B[i].H < 0) return false;
-      ll t = (s - B[i].H) / B[i].S;
-      ts[i] = t >= N - 1 ? N - 1 : t;
+      if (x - H[i] < 0) return false;
+      ll t = (x - H[i]) / S[i];
+      chmin(t, ll(N - 1));
+      ++c[t];
     }
-    ts = countingSort(ts, N - 1);
-    rep(i, N) if (ts[i] < i) return false;
+    vector<ll> s(N + 1, 0);
+    rep(i, N) s[i + 1] = s[i] + c[i];
+    rep(i, N) if (s[i + 1] > i + 1) return false;
     return true;
   };
 
-  ll l = 0, r = 1e15;
-  while (r - l > 1LL) {
-    ll m = (l + r) / 2LL;
+  ll l = 0, r = 1e18;
+  while (r - l > 1) {
+    ll m = (l + r) / 2;
     if (achievable(m)) {
       r = m;
     } else {
       l = m;
     }
   }
-
   cout << r << endl;
 
   return 0;
