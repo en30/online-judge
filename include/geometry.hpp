@@ -1,4 +1,5 @@
 const double EPS = 1e-10;
+const double PI = acos(-1);
 bool equals(double a, double b) { return fabs(a - b) < EPS; }
 
 class Point {
