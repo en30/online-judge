@@ -1,41 +1,31 @@
 #include <bits/stdc++.h>
 #include "../include/template"
-
-int R, C;
-int sy, sx, gy, gx;
-vector<string> c;
-
-struct Point {
-  int y, x;
-};
+#include "../include/grid.hpp"
+#include "../include/bfs_shortest_path.hpp"
 
 int main() {
+  int R, C;
+  int sy, sx, gy, gx;
+
   cin >> R >> C;
   cin >> sy >> sx;
   cin >> gy >> gx;
   --sy, --sx, --gy, --gx;
-  c.resize(R);
-  rep(i, R) cin >> c[i];
 
-  queue<Point> q;
-  q.push(Point{sy, sx});
-  vector<vector<int>> d(R, vector<int>(C, -1));
-  vector<int> dy = {1, 0, -1, 0};
-  vector<int> dx = {0, 1, 0, -1};
-  d[sy][sx] = 0;
-  while (!q.empty()) {
-    auto p = q.front();
-    q.pop();
-    rep(i, 4) {
-      int ny = p.y + dy[i], nx = p.x + dx[i];
-      if (c[ny][nx] == '.' && d[ny][nx] == -1) {
-        d[ny][nx] = d[p.y][p.x] + 1;
-        q.push(Point{ny, nx});
-      }
+  Grid<char> grid(R, C);
+  cin >> grid;
+
+  Digraph<Edge> G(R * C);
+  rep(i, R) rep(j, C) {
+    int u = grid.to1DIndex(i, j);
+    for (auto& p : grid.neighbor4(i, j)) {
+      if (grid[p.i][p.j] == '#') continue;
+      G.addEdge(Edge(u, grid.to1DIndex(p.i, p.j)));
     }
   }
 
-  cout << d[gy][gx] << endl;
+  BFSShortestPath sp(G, grid.to1DIndex(sy, sx));
+  cout << sp.distTo(grid.to1DIndex(gy, gx)) << endl;
 
   return 0;
 }

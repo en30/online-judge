@@ -38,6 +38,10 @@ class Grid {
 
   vector<Pos> neighbor4(int i, int j) const { return neighbor(i, j, di4, dj4); }
 
+  int to1DIndex(int i, int j) { return i * W + j; }
+
+  Pos to2DIndex(int i) { return Pos(i / W, i % W); }
+
   void scanFrom(istream& strm) { rep(i, H) rep(j, W) strm >> G[i][j]; }
 
   void outputTo(ostream& strm) {
