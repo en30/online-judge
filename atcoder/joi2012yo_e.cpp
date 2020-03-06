@@ -4,6 +4,11 @@
 const vector<int> dx[2] = {{+1, +1, 0, -1, 0, +1}, {+1, 0, -1, -1, -1, 0}};
 const vector<int> dy = {0, -1, -1, 0, +1, +1};
 
+struct Position {
+  int x, y;
+  Position(int x, int y) : x(x), y(y){};
+};
+
 int main() {
   int W, H;
   cin >> W >> H;
@@ -15,25 +20,42 @@ int main() {
 
   vector<vector<bool>> used(W, vector<bool>(H, false));
   function<void(int, int)> use = [&](int i, int j) {
+    queue<Position> q;
+    q.emplace(i, j);
     used[i][j] = true;
-    rep(d, 6) {
-      int ni = i + dx[j % 2][d], nj = j + dy[d];
-      if (!in(ni, nj) || used[ni][nj] || grid[ni][nj]) continue;
-      use(ni, nj);
+    while (!q.empty()) {
+      auto& p = q.front();
+      q.pop();
+      rep(d, 6) {
+        int ni = p.x + dx[p.y % 2][d], nj = p.y + dy[d];
+        if (!in(ni, nj) || used[ni][nj] || grid[ni][nj]) continue;
+        q.emplace(ni, nj);
+        used[ni][nj] = true;
+      }
     }
   };
 
   function<int(int, int, int)> count = [&](int i, int j, int target) {
+    int res = 0;
+    queue<Position> q;
+    q.emplace(i, j);
     used[i][j] = true;
-    int c = 6;
-    rep(d, 6) {
-      int ni = i + dx[j % 2][d], nj = j + dy[d];
-      if (!in(ni, nj)) continue;
-      if (grid[ni][nj] == target) c -= 1;
-      if (used[ni][nj] || grid[ni][nj] != target) continue;
-      c += count(ni, nj, target);
+    while (!q.empty()) {
+      auto& p = q.front();
+      q.pop();
+
+      int c = 6;
+      rep(d, 6) {
+        int ni = p.x + dx[p.y % 2][d], nj = p.y + dy[d];
+        if (!in(ni, nj)) continue;
+        if (grid[ni][nj] == target) c -= 1;
+        if (used[ni][nj] || grid[ni][nj] != target) continue;
+        q.emplace(ni, nj);
+        used[ni][nj] = true;
+      }
+      res += c;
     }
-    return c;
+    return res;
   };
 
   rep(i, W) {
