@@ -14,7 +14,7 @@ int main() {
   cin >> T;
 
   ReRooting<ll, ll> subtreeCount(
-      T.adjacencyList(), reduce, [](ll a, ll b) { return (a * b) % M; },
+      T.adjacencyList(), reduce, [](int u, ll a, ll b) { return (a * b) % M; },
       [](int i) { return 1LL; }, -1);
 
   rep(i, N) cout << subtreeCount.value(i, -1) << endl;

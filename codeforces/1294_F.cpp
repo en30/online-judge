@@ -16,7 +16,7 @@ int main() {
     return max(a, b);
   };
 
-  auto depth = [&](Result l, Result r) -> Result {
+  auto depth = [&](int u, Result l, Result r) -> Result {
     Result res(reduce(l, r));
     res.first += 1;
     return res;

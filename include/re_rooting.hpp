@@ -9,7 +9,7 @@ class ReRooting {
   vector<vector<Product>> lpMemo, rpMemo;
   vector<unordered_map<int, int>> id;
   function<Product(Product, Result)> reduce;
-  function<Result(Product, Product)> treeValue;
+  function<Result(int, Product, Product)> treeValue;
   Product uninitialized;
   function<Product(int)> identity;
 
@@ -50,7 +50,7 @@ class ReRooting {
    */
   ReRooting(const vector<vector<int>> &G,
             const function<Product(Product, Result)> &reduce,
-            const function<Result(Product, Product)> &treeValue,
+            const function<Result(int, Product, Product)> &treeValue,
             const function<Product(int)> &identity, Product uninitialized)
       : G(G),
         V(G.size()),
@@ -77,8 +77,8 @@ class ReRooting {
    * @param p 親
    */
   Result value(int u, int p) {
-    if (p == -1) return treeValue(leftProduct(u, G[u].size()), identity(u));
+    if (p == -1) return treeValue(u, leftProduct(u, G[u].size()), identity(u));
 
-    return treeValue(leftProduct(u, id[u][p]), rightProduct(u, id[u][p]));
+    return treeValue(u, leftProduct(u, id[u][p]), rightProduct(u, id[u][p]));
   }
 };
