@@ -5,18 +5,14 @@ void solve() {
   ll n, k;
   scanf("%lld %lld", &n, &k);
 
-  ll l = 1, r = n;
-  while (r - l > 1) {
-    ll m = (l + r) / 2;
-    if (2 * k <= m * (m - 1)) {
-      r = m;
-    } else {
-      l = m;
-    }
+  ll sum = 0;
+  int l = n - 2;
+  while (sum + (n - 1 - l) < k) {
+    sum += n - 1 - l;
+    --l;
   }
-  ll i = l;
-  ll j = n - 1 - (k - (i * (i - 1)) / 2 - 1);
-  rep(l, n) printf("%c", (l == (n - 1 - i) || l == j ? 'b' : 'a'));
+  int r = n - 1 - (k - sum - 1);
+  rep(i, n) printf("%c", (i == l || i == r ? 'b' : 'a'));
   printf("\n");
 }
 

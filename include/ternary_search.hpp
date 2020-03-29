@@ -1,4 +1,42 @@
-double argminimal(function<double(double)> f, double l, double r,
+#pragma once
+
+template <typename T>
+T argminimal(const function<T(T)>& f, T l, T r) {
+  while (r - l > 1) {
+    T m = (l + r) / 2;
+    if (f(m) - f(m - 1) < 0) {
+      l = m;
+    } else {
+      r = m;
+    }
+  }
+  return l;
+}
+
+template <typename T>
+T minimal(const function<T(T)>& f, T l, T r) {
+  return f(argminimal<T>(f, l, r));
+}
+
+template <typename T>
+T argmaximal(const function<T(T)>& f, T l, T r) {
+  while (r - l > 1) {
+    T m = (l + r) / 2;
+    if (f(m) - f(m - 1) > 0) {
+      l = m;
+    } else {
+      r = m;
+    }
+  }
+  return l;
+}
+
+template <typename T>
+T maximal(const function<T(T)>& f, T l, T r) {
+  return f(argmaximal<T>(f, l, r));
+}
+
+double argminimal(const function<double(double)>& f, double l, double r,
                   int iter = 80) {
   for (int i = 0; i < iter; ++i) {
     double c1 = (l * 2 + r) / 3, c2 = (l + r * 2) / 3;
@@ -11,11 +49,12 @@ double argminimal(function<double(double)> f, double l, double r,
   return l;
 }
 
-double minimal(function<double(double)> f, double l, double r, int iter = 80) {
+double minimal(const function<double(double)>& f, double l, double r,
+               int iter = 80) {
   return f(argminimal(f, l, r, iter));
 }
 
-double argmaximal(function<double(double)> f, double l, double r,
+double argmaximal(const function<double(double)>& f, double l, double r,
                   int iter = 80) {
   for (int i = 0; i < iter; ++i) {
     double c1 = (l * 2 + r) / 3, c2 = (l + r * 2) / 3;
@@ -28,6 +67,7 @@ double argmaximal(function<double(double)> f, double l, double r,
   return l;
 }
 
-double maximul(function<double(double)> f, double l, double r, int iter = 80) {
+double maximul(const function<double(double)>& f, double l, double r,
+               int iter = 80) {
   return f(argmaximal(f, l, r, iter));
 }

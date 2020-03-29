@@ -4,7 +4,7 @@
 void solve() {
   int a, b;
   scanf("%d %d", &a, &b);
-  printf("%d\n", ((a + b - 1) / b) * b - a);
+  printf("%d\n", (a % b ? b - a % b : 0));
 }
 
 int main() {
