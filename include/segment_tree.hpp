@@ -1,92 +1,59 @@
+#pragma once
+
 template <typename Monoid>
-struct SegmentTree {
-  using F = function<Monoid(Monoid, Monoid)>;
-
+class SegmentTree {
   int sz;
-  vector<Monoid> seg;
+  vector<Monoid> node;
+  const Monoid identity;
 
-  const F f;
-  const Monoid M1;
-
-  SegmentTree(int n, const F f, const Monoid &M1) : f(f), M1(M1) {
+ public:
+  SegmentTree(int n) : identity(Monoid::identity()) {
     sz = 1;
     while (sz < n) sz <<= 1;
-    seg.assign(2 * sz, M1);
+    node.resize(2 * sz, identity);
   }
 
-  void set(int k, const Monoid &x) { seg[k + sz] = x; }
+  int size() const { return sz; }
 
-  void build() {
-    for (int k = sz - 1; k > 0; k--) {
-      seg[k] = f(seg[2 * k + 0], seg[2 * k + 1]);
+  /**
+   * @brief iの値をxに変更するO(logN)
+   * @param i
+   * @param x
+   */
+  void update(int i, const Monoid &x) {
+    i += sz;
+    node[i] = x;
+    while (i >>= 1) {
+      node[i] = node[2 * i + 0] + node[2 * i + 1];
     }
   }
 
-  void update(int k, const Monoid &x) {
-    k += sz;
-    seg[k] = x;
-    while (k >>= 1) {
-      seg[k] = f(seg[2 * k + 0], seg[2 * k + 1]);
-    }
-  }
+  /**
+   * @brief iでの値を返すO(1)
+   * @param k
+   * @return
+   */
+  Monoid at(const int &k) const { return node[k + sz]; }
 
-  Monoid query(int a, int b) {
-    Monoid L = M1, R = M1;
-    for (a += sz, b += sz; a < b; a >>= 1, b >>= 1) {
-      if (a & 1) L = f(L, seg[a++]);
-      if (b & 1) R = f(seg[--b], R);
-    }
-    return f(L, R);
-  }
+  /**
+   * @brief iに、iでの値とxの演算結果を入れるO(logN)
+   * @param i
+   * @param x
+   */
+  void add(int i, const Monoid &x) { return update(i, at(i) + x); }
 
-  Monoid operator[](const int &k) const { return seg[k + sz]; }
-
-  template <typename C>
-  int find_subtree(int a, const C &check, Monoid &M, bool type) {
-    while (a < sz) {
-      Monoid nxt = type ? f(seg[2 * a + type], M) : f(M, seg[2 * a + type]);
-      if (check(nxt))
-        a = 2 * a + type;
-      else
-        M = nxt, a = 2 * a + 1 - type;
+  /**
+   * @brief [l, r)での演算結果を取得するO(logN)
+   * @param l
+   * @param r
+   * @return
+   */
+  Monoid query(int l, int r) {
+    Monoid L = identity, R = identity;
+    for (l += sz, r += sz; l < r; l >>= 1, r >>= 1) {
+      if (l & 1) L += node[l++];
+      if (r & 1) R += node[--r];
     }
-    return a - sz;
-  }
-
-  template <typename C>
-  int find_first(int a, const C &check) {
-    Monoid L = M1;
-    if (a <= 0) {
-      if (check(f(L, seg[1]))) return find_subtree(1, check, L, false);
-      return -1;
-    }
-    int b = sz;
-    for (a += sz, b += sz; a < b; a >>= 1, b >>= 1) {
-      if (a & 1) {
-        Monoid nxt = f(L, seg[a]);
-        if (check(nxt)) return find_subtree(a, check, L, false);
-        L = nxt;
-        ++a;
-      }
-    }
-    return -1;
-  }
-
-  template <typename C>
-  int find_last(int b, const C &check) {
-    Monoid R = M1;
-    if (b >= sz) {
-      if (check(f(seg[1], R))) return find_subtree(1, check, R, true);
-      return -1;
-    }
-    int a = sz;
-    for (b += sz; a < b; a >>= 1, b >>= 1) {
-      if (b & 1) {
-        Monoid nxt = f(seg[--b], R);
-        if (check(nxt)) return find_subtree(b, check, R, true);
-        R = nxt;
-      }
-    }
-    return -1;
+    return L + R;
   }
 };

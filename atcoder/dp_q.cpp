@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include "../include/template"
+#include "../include/max_monoid.hpp"
 #include "../include/segment_tree.hpp"
 
 int N;
@@ -11,14 +12,13 @@ int main() {
   rep(i, N) cin >> h[i];
   rep(i, N) cin >> a[i];
 
-  SegmentTree<ll> seg(
-      N + 1, [](ll a, ll b) { return max(a, b); }, 0);
+  SegmentTree<MaxMonoid<ll, 0>> seg(N + 1);
 
   rep(i, N) {
-    ll v = max(seg[h[i]], seg.query(0, h[i]) + a[i]);
+    ll v = max(seg.at(h[i]).v, seg.query(0, h[i]).v + a[i]);
     seg.update(h[i], v);
   }
 
-  cout << seg.query(1, N + 1) << endl;
+  cout << seg.query(1, N + 1).v << endl;
   return 0;
 }

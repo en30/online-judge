@@ -5,10 +5,22 @@
 #include "../include/segment_tree.hpp"
 
 vector<pair<int, int>> p(601010);
+vector<ModInt> pow2, ipow2;
 
-struct Node {
+struct Monoid {
   ModInt E, L, R, C;
-  Node(ModInt E, ModInt L, ModInt R, ModInt C) : E(E), L(L), R(R), C(C) {}
+
+  static Monoid identity() { return Monoid(0, 0, 0, 0); }
+
+  Monoid(ModInt E, ModInt L, ModInt R, ModInt C) : E(E), L(L), R(R), C(C) {}
+  Monoid& operator+=(const Monoid& that) {
+    E += that.E + L * that.R * ipow2[C.val()];
+    L += pow2[C.val()] * that.L;
+    R += ipow2[C.val()] * that.R;
+    C += that.C;
+    return *this;
+  }
+  Monoid operator+(const Monoid& that) const { return Monoid(*this) += that; }
 };
 
 int main() {
@@ -19,7 +31,7 @@ int main() {
     p[i].second = i;
   }
 
-  vector<ModInt> pow2(n + 1), ipow2(n + 1);
+  pow2.resize(n + 1), ipow2.resize(n + 1);
   rep(i, n) {
     pow2[i] = ModInt(2).pow(i);
     ipow2[i] = pow2[i].inverse();
@@ -39,25 +51,18 @@ int main() {
 
   CoordinateCompression<pair<int, int>> comp(p);
 
-  SegmentTree<Node> seg(
-      n + q,
-      [&](Node lc, Node rc) {
-        return Node(lc.E + rc.E + lc.L * rc.R * ipow2[lc.C.val()],
-                    lc.L + pow2[lc.C.val()] * rc.L,
-                    lc.R + ipow2[lc.C.val()] * rc.R, lc.C + rc.C);
-      },
-      Node(0, 0, 0, 0));
+  SegmentTree<Monoid> seg(n + q);
 
   rep(i, n) {
     seg.update(comp.compress(p[i]),
-               Node(0, ipow2[1] * p[i].first, p[i].first, 1));
+               Monoid(0, ipow2[1] * p[i].first, p[i].first, 1));
   }
 
   cout << seg.query(0, n + q).E << endl;
   rep(i, q) {
     seg.update(comp.compress(p[n + i]),
-               Node(0, ipow2[1] * p[n + i].first, p[n + i].first, 1));
-    seg.update(comp.compress(p[queries[i]]), Node(0, 0, 0, 0));
+               Monoid(0, ipow2[1] * p[n + i].first, p[n + i].first, 1));
+    seg.update(comp.compress(p[queries[i]]), Monoid(0, 0, 0, 0));
     p[queries[i]] = p[n + i];
     cout << seg.query(0, n + q).E << endl;
   }
