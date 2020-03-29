@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include "../include/template"
+#include "../include/binary_search.hpp"
 #include "../include/ternary_search.hpp"
 
 int main() {
@@ -20,36 +21,31 @@ int main() {
   }
 
   const ll INF = 1e18;
-
-  auto pushDownCost = [&](ll m) -> ll {
-    int c = 0;
-    ll res = k - hist[m];
-    rep(i, n) {
-      c += (a[i] >= m);
-      res += max(a[i] - m + 1, 0LL);
-    }
-    return c >= k ? res : INF + m;
-  };
-  auto pushUpCost = [&](ll m) -> ll {
-    int c = 0;
-    ll res = k - hist[m];
-    rep(i, n) {
-      c += (a[i] <= m);
-      res += max(m - 1 - a[i], 0LL);
-    }
-    return c >= k ? res : INF - m;
-  };
-  auto sandCost = [&](ll m) -> ll {
-    ll res = k - hist[m];
-    rep(i, n) {
-      res += max(a[i] - (m + 1), 0LL);
-      res += max(m - 1 - a[i], 0LL);
-    }
-    return res;
-  };
   ll ans = 1e18;
-  chmin(ans, minimal<ll>(pushDownCost, 0, 1e9 + 1));
-  chmin(ans, minimal<ll>(pushUpCost, 0, 1e9 + 1));
+
+  ll u = integer_partition_point<ll>(0, 1e9 + 1, [&](ll m) {
+    int c = count_if(all(a), [&](int v) { return v >= m; });
+    return c >= k;
+  });
+  chmin(ans, accumulate(all(a), k - hist[u],
+                        [&](ll a, ll e) { return a + max(e - (u + 1), 0LL); }));
+
+  ll d = integer_partition_point<ll>(0, 1e9 + 1, [&](ll m) {
+    int c = count_if(all(a), [&](int v) { return v <= m; });
+    return c < k;
+  });
+  ++d;
+  chmin(ans, accumulate(all(a), k - hist[d],
+                        [&](ll a, ll e) { return a + max(d - 1 - e, 0LL); }));
+
+  auto sandCost = [&](ll m) -> ll {
+    return accumulate(all(a), k - hist[m], [&](ll a, ll e) {
+      a += max(e - (m + 1), 0LL);
+      a += max(m - 1 - e, 0LL);
+      return a;
+    });
+  };
+
   chmin(ans, minimal<ll>(sandCost, 0, 1e9 + 1));
 
   cout << ans << endl;
