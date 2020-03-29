@@ -5,7 +5,24 @@
 
 int N, M;
 
-ll reduce(ll prod, ll v) { return ((v + 1) * prod) % M; }
+struct Monoid {
+  ll c;
+  bool operator==(const Monoid& that) const { return c == that.c; }
+  bool operator!=(const Monoid& that) const { return !(*(this) == that); }
+
+  static Monoid identity(int i) { return Monoid{1}; }
+
+  Monoid() : c(-1) {}
+  Monoid(ll c) : c(c) {}
+  Monoid& operator+=(const Monoid& that) {
+    c *= that.c;
+    c %= M;
+    return *this;
+  }
+  Monoid operator+(const Monoid& that) const { return Monoid(*this) += that; }
+
+  Monoid addRoot(int u) { return Monoid{c + 1}; }
+};
 
 int main() {
   cin >> N >> M;
@@ -13,11 +30,8 @@ int main() {
   UndirectedTree T(N);
   cin >> T;
 
-  ReRooting<ll, ll> subtreeCount(
-      T.adjacencyList(), reduce, [](int u, ll a, ll b) { return (a * b) % M; },
-      [](int i) { return 1LL; }, -1);
-
-  rep(i, N) cout << subtreeCount.value(i, -1) << endl;
+  ReRooting<Monoid> subtreeCount(T.adjacencyList());
+  rep(i, N) cout << subtreeCount.value(i, -1).c - 1 << endl;
 
   return 0;
 }
